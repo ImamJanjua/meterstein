@@ -1,15 +1,24 @@
-import '~/global.css';
+import "~/global.css";
 
-import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import * as React from 'react';
-import { Appearance, Platform, View } from 'react-native';
-import { NAV_THEME } from '~/lib/constants';
-import { useColorScheme } from '~/lib/useColorScheme';
-import { PortalHost } from '@rn-primitives/portal';
-import { ThemeToggle } from '~/components/ThemeToggle';
-import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
+import {
+  DarkTheme,
+  DefaultTheme,
+  Theme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Stack, router, usePathname, useSegments } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import * as React from "react";
+import { Appearance, Platform, View } from "react-native";
+import { NAV_THEME } from "~/lib/constants";
+import { useColorScheme } from "~/lib/useColorScheme";
+import { PortalHost } from "@rn-primitives/portal";
+import { ThemeToggle } from "~/components/ThemeToggle";
+import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
+import { Toaster } from "sonner-native";
+import { supabase } from "~/lib/supabase";
+import * as SplashScreen from "expo-splash-screen";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -23,7 +32,7 @@ const DARK_THEME: Theme = {
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from 'expo-router';
+} from "expo-router";
 
 const usePlatformSpecificSetup = Platform.select({
   web: useSetWebBackgroundClassName,
@@ -31,40 +40,184 @@ const usePlatformSpecificSetup = Platform.select({
   default: noop,
 });
 
+// Route Logger Component
+function RouteLogger() {
+  const pathname = usePathname();
+  const segments = useSegments();
+
+  React.useEffect(() => {
+    console.log("📍 Current Route:", {
+      pathname,
+      segments,
+      fullPath: `/${segments.join("/")}`,
+    });
+  }, [pathname, segments]);
+
+  return null;
+}
+
 export default function RootLayout() {
   usePlatformSpecificSetup();
   const { isDarkColorScheme } = useColorScheme();
+  const [appIsReady, setAppIsReady] = React.useState(false);
+
+  React.useEffect(() => {
+    async function prepare() {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // Don't navigate here, just set up the auth listener
+        const { data } = supabase.auth.onAuthStateChange((event, session) => {
+          if (event === "INITIAL_SESSION") {
+            // Store the session info but don't navigate yet
+            if (session) {
+              // We'll handle this navigation after mount
+            }
+          } else if (event === "SIGNED_IN") {
+            router.replace("/home");
+          } else if (event === "SIGNED_OUT") {
+            router.replace("/");
+          }
+        });
+
+        return () => {
+          data.subscription.unsubscribe();
+        };
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  // Add a new effect to handle initial navigation after mount
+  // React.useEffect(() => {
+  //   if (appIsReady) {
+  //     // Check if user is already signed in and navigate accordingly
+  //     supabase.auth.getSession().then(({ data: { session } }) => {
+  //       if (session) {
+  //         router.replace("/abnahme");
+  //       }
+  //     });
+  //   }
+  // }, [appIsReady]);
+
+  React.useEffect(() => {
+    if (appIsReady) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      SplashScreen.hideAsync();
+
+      // Check if user is already signed in and navigate accordingly
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          router.replace("/home");
+        }
+      });
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
 
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-      <Stack>
-        <Stack.Screen
-          name='index'
-          options={{
-            title: 'Starter Base',
-            headerRight: () => <ThemeToggle />,
-          }}
-        />
-      </Stack>
-      <PortalHost />
-    </ThemeProvider>
+    <GestureHandlerRootView>
+      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+        <RouteLogger />
+        <Stack>
+          <Stack.Screen
+            name="index"
+            options={{
+              title: "Meterstein",
+              headerRight: () => <ThemeToggle />,
+            }}
+          />
+          <Stack.Screen
+            name="home"
+            options={{
+              title: "Home",
+              headerRight: () => <ThemeToggle />,
+            }}
+          />
+          <Stack.Screen
+            name="order"
+            options={{
+              title: "Bestellung",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="delivery"
+            options={{
+              title: "Lieferung",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="problem"
+            options={{
+              title: "Problem",
+            }}
+          />
+          <Stack.Screen
+            name="abnahme"
+            options={{
+              title: "Abnahme",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="hilfe"
+            options={{
+              title: "Hilfe",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="frei"
+            options={{
+              title: "Frei",
+            }}
+          />
+          <Stack.Screen
+            name="phone-demo"
+            options={{
+              title: "Telefon Demo",
+              headerRight: () => <ThemeToggle />,
+            }}
+          />
+        </Stack>
+        <Toaster />
+        <PortalHost />
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
 
 const useIsomorphicLayoutEffect =
-  Platform.OS === 'web' && typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
+  Platform.OS === "web" && typeof window === "undefined"
+    ? React.useEffect
+    : React.useLayoutEffect;
 
 function useSetWebBackgroundClassName() {
   useIsomorphicLayoutEffect(() => {
     // Adds the background color to the html element to prevent white background on overscroll.
-    document.documentElement.classList.add('bg-background');
+    document.documentElement.classList.add("bg-background");
   }, []);
 }
 
 function useSetAndroidNavigationBar() {
   React.useLayoutEffect(() => {
-    setAndroidNavigationBar(Appearance.getColorScheme() ?? 'light');
+    setAndroidNavigationBar(Appearance.getColorScheme() ?? "light");
   }, []);
 }
 
