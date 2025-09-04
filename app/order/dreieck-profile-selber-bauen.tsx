@@ -5,6 +5,8 @@ import {
   Platform,
   Image as RNImage,
   TouchableOpacity,
+  Modal,
+  Dimensions,
 } from "react-native";
 import { Image } from "expo-image";
 import React from "react";
@@ -20,6 +22,9 @@ import { toast } from "sonner-native";
 import { EMAIL_RECIPIENTS } from "~/lib/constants";
 
 const DreieckProfileSelberBauen = () => {
+  // Image zoom state
+  const [isImageModalVisible, setIsImageModalVisible] = React.useState(false);
+
   // Customer and measurement fields
   const [nameKunde, setNameKunde] = React.useState("");
   const [measurementB, setMeasurementB] = React.useState("");
@@ -120,35 +125,41 @@ const DreieckProfileSelberBauen = () => {
       return;
     }
 
-    const emailBody = `
-  Bestellung - Dreieck Profile selber bauen
-  
-  Kundenname: ${nameKunde}
-  
-  Stück: ${measurementB}
-  
-  Farbe: ${farbe || "Nicht ausgewählt"}
-  
-      Profilart: ${rahmenprofil ? "Rahmenprofil AL8002 mit Deckel" : ""}${
-      rahmenprofil && mittelprofil ? ", " : ""
-    }${mittelprofil ? "Mittelprofil AL8000 mit Deckel" : ""}${
-      !rahmenprofil && !mittelprofil ? "Nicht ausgewählt" : ""
+    // Validate Profilart selection
+    if (!rahmenprofil && !mittelprofil) {
+      toast.error("Profilart erforderlich", {
+        description: "Bitte wählen Sie mindestens eine Profilart aus.",
+      });
+      return;
     }
-  
-  Wichtiges:
-  ${wichtiges || "Nichts angegeben"}
-  
-  Anzahl der beigefügten Bilder: ${images.length}
-  
-  ---
-  Gesendet über Meterstein
-      `.trim();
+
+    const emailBody = `
+Bestellung - Dreieck Profile selber bauen
+
+Kundenname: ${nameKunde}
+
+Stück: ${measurementB}
+
+Farbe: ${farbe || "Nicht ausgewählt"}
+
+Profilart: ${rahmenprofil ? "Rahmenprofil AL8002 mit Deckel" : ""}${
+      rahmenprofil && mittelprofil ? ", " : ""
+    }${mittelprofil ? "Mittelprofil AL8000 mit Deckel" : ""}
+
+Wichtiges:
+${wichtiges || "Nichts angegeben"}
+
+Anzahl der beigefügten Bilder: ${images.length}
+
+---
+Gesendet über Meterstein
+    `.trim();
 
     try {
       // Compose email
       const result = await MailComposer.composeAsync({
         recipients: EMAIL_RECIPIENTS,
-        subject: `Bestellung - Schiebewand - ${nameKunde}`,
+        subject: `Bestellung - Dreieck Profile selber bauen - ${nameKunde}`,
         body: emailBody,
         attachments: images, // Use image URIs directly
       });
@@ -175,25 +186,37 @@ const DreieckProfileSelberBauen = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       className="flex-1"
+      style={{ flex: 1 }}
     >
       <ScrollView
         className="flex-1"
-        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 100 }}
       >
-        <View className="gap-4 p-4 bg-background/30">
+        <View className="gap-8 p-4 bg-background/30">
+          <View className="mt-8 items-center">
+            <Text className="text-3xl font-bold text-red-500">
+              Dreieck Profile selber bauen
+            </Text>
+          </View>
+
           {/* Product Image */}
-          <Image
-            source={require("~/assets/images/dreieck-profile-selber-bauen-main.webp")}
-            contentFit="contain"
-            cachePolicy="memory-disk"
-            transition={200}
-            style={{
-              width: "100%",
-              height: 300,
-            }}
-          />
+          <TouchableOpacity
+            onPress={() => setIsImageModalVisible(true)}
+            activeOpacity={0.8}
+          >
+            <Image
+              source={require("~/assets/images/dreieck-profile-selber-bauen-main.webp")}
+              contentFit="contain"
+              cachePolicy="memory-disk"
+              transition={200}
+              style={{
+                width: "100%",
+                height: 300,
+              }}
+            />
+          </TouchableOpacity>
 
           {/* Name Kunde Section */}
           <View className="gap-2">
@@ -214,9 +237,7 @@ const DreieckProfileSelberBauen = () => {
               placeholder="Anzahl eingeben..."
               keyboardType="numeric"
             />
-            <Text className="text-sm text-muted-foreground">
-              600mm in profil
-            </Text>
+            <Text className="text-muted-foreground">6000mm in profil</Text>
           </View>
 
           {/* Farbe Section */}
@@ -239,7 +260,7 @@ const DreieckProfileSelberBauen = () => {
 
           {/* Profilart Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Profilart</Text>
+            <Text className="text-lg font-semibold">Profilart *</Text>
             <CheckboxWithLabel
               label="Rahmenprofil AL8002 mit Deckel"
               checked={rahmenprofil}
@@ -253,7 +274,7 @@ const DreieckProfileSelberBauen = () => {
           </View>
 
           {/* Wichtiges Section */}
-          <View className="gap-2">
+          <View className="gap-2 mt-4">
             <Text className="text-lg font-semibold">Wichtiges</Text>
             <Textarea
               value={wichtiges}
@@ -302,11 +323,67 @@ const DreieckProfileSelberBauen = () => {
           </View>
 
           {/* Send Button */}
-          <Button onPress={sendOrder}>
-            <Text>Senden</Text>
+          <Button onPress={sendOrder} className="bg-red-500 mb-8 mt-8">
+            <Text className="text-foreground">Senden</Text>
           </Button>
         </View>
       </ScrollView>
+
+      {/* Image Zoom Modal */}
+      <Modal
+        visible={isImageModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsImageModalVisible(false)}
+      >
+        <View className="flex-1 bg-black/90">
+          {/* Image Container */}
+          <View className="flex-1 justify-center items-center">
+            {/* Close Button */}
+            <TouchableOpacity
+              onPress={() => setIsImageModalVisible(false)}
+              className="absolute top-20 w-14 h-14 right-8 items-center justify-center z-20 bg-red-500 rounded-full p-2 shadow-lg"
+              activeOpacity={0.7}
+            >
+              <Text className="text-white text-xl font-bold">✕</Text>
+            </TouchableOpacity>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              maximumZoomScale={3.0}
+              minimumZoomScale={1.0}
+              contentContainerStyle={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              style={{ flex: 1 }}
+            >
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                maximumZoomScale={3.0}
+                minimumZoomScale={1.0}
+                contentContainerStyle={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                style={{ flex: 1 }}
+              >
+                <Image
+                  source={require("~/assets/images/dreieck-profile-selber-bauen-main.webp")}
+                  contentFit="contain"
+                  cachePolicy="memory-disk"
+                  transition={200}
+                  style={{
+                    width: Dimensions.get("window").width * 0.85,
+                    height: Dimensions.get("window").height * 0.8,
+                  }}
+                />
+              </ScrollView>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 };

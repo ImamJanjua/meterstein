@@ -9,11 +9,8 @@ import {
 import { Image } from "expo-image";
 import React from "react";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import { Label } from "~/components/ui/label";
 import * as ImagePicker from "expo-image-picker";
 import * as MailComposer from "expo-mail-composer";
 import { toast } from "sonner-native";
@@ -88,15 +85,15 @@ const AbgeholterRetourenbeleg = () => {
     }
 
     const emailBody = `
-                    Abgeholter Retourenbeleg - Meldung
-                    
-                    Wichtiges: ${wichtiges}
-                    
-                    Anzahl der beigefügten Bilder: ${images.length}
-                    
-                    ---
-                    Gesendet über Meterstein
-                        `.trim();
+Abgeholter Retourenbeleg - Meldung
+
+Wichtiges: ${wichtiges}
+
+Anzahl der beigefügten Bilder: ${images.length}
+
+---
+Gesendet über Meterstein
+    `.trim();
 
     try {
       // Compose email
@@ -129,14 +126,21 @@ const AbgeholterRetourenbeleg = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       className="flex-1"
+      style={{ flex: 1 }}
     >
       <ScrollView
         className="flex-1"
-        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 100 }}
       >
-        <View className="gap-4 p-4 bg-background/30">
+        <View className="gap-8 p-4 bg-background/30">
+          <View className="mt-8 items-center">
+            <Text className="text-3xl font-bold text-red-500">
+              Abgeholter Retourenbeleg
+            </Text>
+          </View>
+
           {/* Wichtiges Section */}
           <View className="gap-2">
             <Text className="text-lg font-semibold">Wichtiges *</Text>
@@ -187,58 +191,13 @@ const AbgeholterRetourenbeleg = () => {
           </View>
 
           {/* Send Button */}
-          <Button onPress={sendOrder}>
-            <Text>Senden</Text>
+          <Button onPress={sendOrder} className="bg-red-500 mb-8 mt-8">
+            <Text className="text-foreground">Senden</Text>
           </Button>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
-
-function RadioGroupItemWithLabel({
-  value,
-  onLabelPress,
-}: {
-  value: string;
-  onLabelPress: () => void;
-}) {
-  return (
-    <View className={"flex-row gap-2 items-center"}>
-      <RadioGroupItem aria-labelledby={`label-for-${value}`} value={value} />
-      <Label nativeID={`label-for-${value}`} onPress={onLabelPress}>
-        {value}
-      </Label>
-    </View>
-  );
-}
-
-function CheckboxWithLabel({
-  label,
-  checked,
-  onToggle,
-}: {
-  label: string;
-  checked: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <TouchableOpacity
-      onPress={onToggle}
-      className="flex-row gap-2 items-center py-2"
-    >
-      <View
-        className={`w-5 h-5 border-2 rounded ${
-          checked
-            ? "bg-primary border-primary"
-            : "bg-background border-muted-foreground"
-        } items-center justify-center`}
-      >
-        {checked && <Text className="text-primary-foreground text-xs">✓</Text>}
-      </View>
-      <Label>{label}</Label>
-    </TouchableOpacity>
-  );
-}
 
 export default AbgeholterRetourenbeleg;

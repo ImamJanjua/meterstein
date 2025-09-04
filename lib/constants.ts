@@ -17,4 +17,4 @@ export const NAV_THEME = {
   },
 };
 
-export const EMAIL_RECIPIENTS = ["yourneedsaf@gmail.com"];
+export const EMAIL_RECIPIENTS = ["app@meterstein.de"];

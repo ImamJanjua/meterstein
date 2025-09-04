@@ -1,127 +1,143 @@
-import { View, ScrollView, TouchableOpacity } from "react-native";
 import React from "react";
-import { router } from "expo-router";
+import { View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { Text } from "~/components/ui/text";
-import { Card } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
+import { router } from "expo-router";
+import { useColorScheme } from "~/lib/useColorScheme";
+import { Platform } from "react-native";
 import {
+  AlertTriangle,
   Link,
   Calendar,
   Mail,
-  ShoppingCart,
-  Truck,
-  AlertTriangle,
   HelpCircle,
   Car,
   Plane,
-  Phone,
+  Package,
+  Truck,
+  ClipboardList,
 } from "lucide-react-native";
+import { Card } from "~/components/ui/card";
+import { supabase } from "~/lib/supabase";
+import { getAppRole, getUserEmail, getUserId } from "~/lib/jwt-utils";
 
 const HomeScreen = () => {
-  const navigationItems = [
+  const { isDarkColorScheme } = useColorScheme();
+  const [appRole, setAppRole] = React.useState<string | null>(null);
+
+  // Get user info from token
+  React.useEffect(() => {
+    const getUserInfo = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        const role = getAppRole(session.access_token);
+        const userEmail = getUserEmail(session.access_token);
+        const userId = getUserId(session.access_token);
+
+        setAppRole(role);
+
+        console.log("🏠 Home Screen - User Info:", {
+          appRole: role,
+          userEmail,
+          userId,
+        });
+      }
+    };
+
+    getUserInfo();
+  }, []);
+
+  const allNavigationItems = [
     {
       id: "bestellung",
       title: "Bestellung",
-      icon: ShoppingCart,
-      color: "text-red-500",
-      bgColor: "bg-red-50",
-      borderColor: "border-red-200",
+      icon: Package,
       onPress: () => router.push("/order"),
     },
     {
       id: "lieferung",
       title: "Lieferung",
       icon: Truck,
-      color: "text-orange-500",
-      bgColor: "bg-orange-50",
-      borderColor: "border-orange-200",
       onPress: () => router.push("/delivery" as any),
     },
     {
-      id: "problem",
-      title: "Problem",
+      id: "reklamation",
+      title: "Reklamation",
       icon: AlertTriangle,
-      color: "text-yellow-500",
-      bgColor: "bg-yellow-50",
-      borderColor: "border-yellow-200",
       onPress: () => router.push("/problem"),
     },
     {
       id: "abnahme",
       title: "Abnahme",
-      icon: Link,
-      color: "text-blue-500",
-      bgColor: "bg-blue-50",
-      borderColor: "border-blue-200",
+      icon: ClipboardList,
       onPress: () => router.push("/abnahme" as any),
     },
     {
       id: "kalender",
       title: "Kalender",
       icon: Calendar,
-      color: "text-green-500",
-      bgColor: "bg-green-50",
-      borderColor: "border-green-200",
-      onPress: () => router.push("/order" as any),
+      onPress: () => router.push("/kalendar" as any),
     },
     {
       id: "kontakt",
       title: "Kontakt",
       icon: Mail,
-      color: "text-purple-500",
-      bgColor: "bg-purple-50",
-      borderColor: "border-purple-200",
-      onPress: () => router.push("/order" as any),
+      onPress: () => router.push("/kontakt" as any),
     },
     {
       id: "hilfe",
       title: "Hilfe",
       icon: HelpCircle,
-      color: "text-indigo-500",
-      bgColor: "bg-indigo-50",
-      borderColor: "border-indigo-200",
       onPress: () => router.push("/hilfe" as any),
     },
     {
       id: "autos",
       title: "Autos",
       icon: Car,
-      color: "text-teal-500",
-      bgColor: "bg-teal-50",
-      borderColor: "border-teal-200",
-      onPress: () => router.push("/order" as any),
+      onPress: () => router.push("/autos" as any),
     },
     {
       id: "frei",
       title: "Frei?",
       icon: Plane,
-      color: "text-pink-500",
-      bgColor: "bg-pink-50",
-      borderColor: "border-pink-200",
       onPress: () => router.push("/frei" as any),
-    },
-    {
-      id: "phone",
-      title: "Telefon",
-      icon: Phone,
-      color: "text-green-500",
-      bgColor: "bg-green-50",
-      borderColor: "border-green-200",
-      onPress: () => router.push("/phone-demo" as any),
     },
   ];
 
+  // Filter navigation items based on app role
+  const navigationItems = allNavigationItems.filter((item) => {
+    if (appRole === "aushilfe") {
+      // Hide "lieferung" and "kontakt" for aushilfe role
+      return item.id !== "lieferung" && item.id !== "kontakt";
+    }
+    if (appRole === "montage") {
+      // Hide only "lieferung" for montage role
+      return item.id !== "lieferung";
+    }
+    return true; // Show all items for other roles
+  });
+
   return (
     <ScrollView className="flex-1 bg-background">
-      <View className="p-6">
+      <View className="p-4">
         {/* Header */}
-        <View className="mb-8">
-          <Text className="text-3xl font-bold text-foreground mb-2">
-            Willkommen
-          </Text>
-          <Text className="text-lg text-muted-foreground">
-            Wählen Sie eine Option aus dem Menü
-          </Text>
+        <View className="items-center justify-center mb-12">
+          {isDarkColorScheme ? (
+            <Image
+              source={require("../assets/images/icon-dark-transparent.png")}
+              className={Platform.OS === "web" ? "w-16 h-16" : "w-64 h-64"}
+              resizeMode="contain"
+            />
+          ) : (
+            <Image
+              source={require("../assets/images/icon-transparent.png")}
+              className={
+                Platform.OS === "web" ? "w-12 h-12 mt-12" : "w-40 h-40 mt-12"
+              }
+              resizeMode="contain"
+            />
+          )}
         </View>
 
         {/* Grid Layout */}
@@ -130,19 +146,15 @@ const HomeScreen = () => {
             <TouchableOpacity
               key={item.id}
               onPress={item.onPress}
-              className="w-[30%] mb-6"
+              className="w-[30%] mb-4 p-2 items-center"
               activeOpacity={0.7}
             >
-              <Card
-                className={`p-4 items-center border-2 ${item.borderColor} ${item.bgColor} shadow-sm`}
-              >
-                <View className={`p-3 rounded-full ${item.bgColor} mb-3`}>
-                  <item.icon size={32} className={item.color} />
-                </View>
-                <Text className="text-sm font-semibold text-gray-800 text-center">
-                  {item.title}
-                </Text>
-              </Card>
+              <View className="mb-4">
+                <item.icon size={48} className="text-card-foreground" />
+              </View>
+              <Text className="text-base font-semibold text-foreground text-center">
+                {item.title}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>

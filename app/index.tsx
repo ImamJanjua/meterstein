@@ -84,8 +84,12 @@ export default function LoginScreen() {
               />
             </View>
 
-            <Button onPress={handleSubmit} disabled={loading} className="mt-4">
-              <Text className="text-primary-foreground font-medium">
+            <Button
+              onPress={handleSubmit}
+              disabled={loading}
+              className="mt-4 bg-red-500"
+            >
+              <Text className="font-medium text-primary-foreground">
                 Bestätigen
               </Text>
             </Button>

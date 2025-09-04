@@ -4,6 +4,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  Modal,
+  Dimensions,
 } from "react-native";
 import { Image } from "expo-image";
 import React from "react";
@@ -17,7 +19,10 @@ import * as MailComposer from "expo-mail-composer";
 import { toast } from "sonner-native";
 import { EMAIL_RECIPIENTS } from "~/lib/constants";
 
-const Sonnensegel = () => {
+const Plissees = () => {
+  // Image zoom state
+  const [isImageModalVisible, setIsImageModalVisible] = React.useState(false);
+
   // Customer and measurement fields
   const [nameKunde, setNameKunde] = React.useState("");
   const [measurementA, setMeasurementA] = React.useState("");
@@ -95,33 +100,33 @@ const Sonnensegel = () => {
     }
 
     const emailBody = `
-  Bestellung - Plissees
-  
-  Kundenname: ${nameKunde}
-  
-  Maße:
-  a: ${measurementA} mm
-  b: ${measurementB} mm
-  
-  Farbe: ${farbe || "Nicht ausgewählt"}
-  
-  Stück: ${stueck}
-  
-  Stoff:
-  ${stoff}
-  
-  Wichtiges:
-  ${wichtiges || "Nichts angegeben"}
-  
-  ---
-  Gesendet über Meterstein
-      `.trim();
+Bestellung - Plissees
+
+Kundenname: ${nameKunde}
+
+Maße:
+a: ${measurementA} mm
+b: ${measurementB} mm
+
+Farbe: ${farbe || "Nicht ausgewählt"}
+
+Stück: ${stueck}
+
+Stoff:
+${stoff}
+
+Wichtiges:
+${wichtiges || "Nichts angegeben"}
+
+---
+Gesendet über Meterstein
+    `.trim();
 
     try {
       // Compose email
       const result = await MailComposer.composeAsync({
         recipients: EMAIL_RECIPIENTS,
-        subject: `Bestellung - Sonnensegel - ${nameKunde}`,
+        subject: `Bestellung - Plissees - ${nameKunde}`,
         body: emailBody,
       });
 
@@ -147,25 +152,35 @@ const Sonnensegel = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       className="flex-1"
+      style={{ flex: 1 }}
     >
       <ScrollView
         className="flex-1"
-        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 100 }}
       >
         <View className="gap-4 p-4 bg-background/30">
+          <View className="mt-8 items-center">
+            <Text className="text-3xl font-bold text-red-500">Plissees</Text>
+          </View>
+
           {/* Product Image */}
-          <Image
-            source={require("~/assets/images/sonnensegel-main.webp")}
-            contentFit="contain"
-            cachePolicy="memory-disk"
-            transition={200}
-            style={{
-              width: "100%",
-              height: 300,
-            }}
-          />
+          <TouchableOpacity
+            onPress={() => setIsImageModalVisible(true)}
+            activeOpacity={0.8}
+          >
+            <Image
+              source={require("~/assets/images/sonnensegel-main.webp")}
+              contentFit="contain"
+              cachePolicy="memory-disk"
+              transition={200}
+              style={{
+                width: "100%",
+                height: 300,
+              }}
+            />
+          </TouchableOpacity>
 
           {/* Important Measurement Information */}
           <View className="gap-3 p-4 bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-800 rounded-lg">
@@ -193,6 +208,18 @@ const Sonnensegel = () => {
             />
           </View>
 
+          {/* Stück Section */}
+          <View className="gap-2">
+            <Text className="text-lg font-semibold">Stück *</Text>
+            <Input
+              value={stueck}
+              onChangeText={setStueck}
+              placeholder="Anzahl eingeben..."
+              keyboardType="numeric"
+            />
+            <Text className="text-muted-foreground">Wie viel?</Text>
+          </View>
+
           {/* Measurement A Section */}
           <View className="gap-2">
             <Text className="text-lg font-semibold">a *</Text>
@@ -202,7 +229,7 @@ const Sonnensegel = () => {
               placeholder="Maß eingeben..."
               keyboardType="numeric"
             />
-            <Text className="text-sm text-muted-foreground">
+            <Text className="text-muted-foreground">
               in mm Innenkante - Innenkante - 20mm
             </Text>
           </View>
@@ -216,7 +243,7 @@ const Sonnensegel = () => {
               placeholder="Maß eingeben..."
               keyboardType="numeric"
             />
-            <Text className="text-sm text-muted-foreground">
+            <Text className="text-muted-foreground">
               in mm Außenkante - Außenkante
             </Text>
           </View>
@@ -239,21 +266,11 @@ const Sonnensegel = () => {
             </RadioGroup>
           </View>
 
-          {/* Stück Section */}
-          <View className="gap-2">
-            <Text className="text-lg font-semibold">Stück *</Text>
-            <Input
-              value={stueck}
-              onChangeText={setStueck}
-              placeholder="Anzahl eingeben..."
-              keyboardType="numeric"
-            />
-          </View>
-
           {/* Stoff Section */}
           <View className="gap-2">
             <Text className="text-lg font-semibold">Stoff *</Text>
             <Textarea value={stoff} onChangeText={setStoff} />
+            <Text className="text-muted-foreground">Kunde Fragen</Text>
           </View>
 
           {/* Wichtiges Section */}
@@ -267,11 +284,67 @@ const Sonnensegel = () => {
           </View>
 
           {/* Send Button */}
-          <Button onPress={sendOrder}>
-            <Text>Senden</Text>
+          <Button onPress={sendOrder} className="bg-red-500 mb-8 mt-8">
+            <Text className="text-foreground">Senden</Text>
           </Button>
         </View>
       </ScrollView>
+
+      {/* Image Zoom Modal */}
+      <Modal
+        visible={isImageModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsImageModalVisible(false)}
+      >
+        <View className="flex-1 bg-black/90">
+          {/* Image Container */}
+          <View className="flex-1 justify-center items-center">
+            {/* Close Button */}
+            <TouchableOpacity
+              onPress={() => setIsImageModalVisible(false)}
+              className="absolute top-20 w-14 h-14 right-8 items-center justify-center z-20 bg-red-500 rounded-full p-2 shadow-lg"
+              activeOpacity={0.7}
+            >
+              <Text className="text-white text-xl font-bold">✕</Text>
+            </TouchableOpacity>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              maximumZoomScale={3.0}
+              minimumZoomScale={1.0}
+              contentContainerStyle={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              style={{ flex: 1 }}
+            >
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                maximumZoomScale={3.0}
+                minimumZoomScale={1.0}
+                contentContainerStyle={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                style={{ flex: 1 }}
+              >
+                <Image
+                  source={require("~/assets/images/sonnensegel-main.webp")}
+                  contentFit="contain"
+                  cachePolicy="memory-disk"
+                  transition={200}
+                  style={{
+                    width: Dimensions.get("window").width * 0.85,
+                    height: Dimensions.get("window").height * 0.8,
+                  }}
+                />
+              </ScrollView>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 };
@@ -321,4 +394,4 @@ function CheckboxWithLabel({
   );
 }
 
-export default Sonnensegel;
+export default Plissees;

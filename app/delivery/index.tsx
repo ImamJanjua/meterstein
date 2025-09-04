@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { Image } from "expo-image";
 import { Text } from "~/components/ui/text";
 import { Card } from "~/components/ui/card";
+import { ChevronRight } from "~/lib/icons/index";
 
 const DeliveryCategoriesScreen = () => {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
@@ -15,7 +16,7 @@ const DeliveryCategoriesScreen = () => {
     {
       id: "abholung",
       name: "Abholung",
-      icon: "📦",
+      image: require("~/assets/images/abholung-icon.webp"),
       subcategories: [
         {
           id: "container",
@@ -107,7 +108,17 @@ const DeliveryCategoriesScreen = () => {
 
   return (
     <ScrollView className="flex-1 bg-background">
-      <View className="p-4 gap-3">
+      <View className="p-4 gap-4 flex-1 justify-center">
+        {/* Header */}
+        <View className="mb-16 mt-8 items-center">
+          <Text className="text-3xl font-bold text-red-500 mb-2">
+            Lieferung
+          </Text>
+          <Text className="text-lg text-muted-foreground">
+            Wählen Sie eine Kategorie aus
+          </Text>
+        </View>
+
         {/* Wareneingang Direct Button */}
         <Card className="overflow-hidden">
           <TouchableOpacity
@@ -115,12 +126,24 @@ const DeliveryCategoriesScreen = () => {
             className="p-4 flex-row items-center justify-between bg-primary/5"
           >
             <View className="flex-row items-center gap-3">
-              <Text className="text-2xl">📥</Text>
+              <Image
+                source={require("~/assets/images/wareneingang-icon.webp")}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={200}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 8,
+                }}
+              />
               <Text className="text-lg font-semibold">Wareneingang</Text>
             </View>
-            <Text className="text-lg">→</Text>
+            <ChevronRight className="w-6 h-6 text-foreground" />
           </TouchableOpacity>
         </Card>
+
+        <View className="h-px bg-red-500 mx-4 my-2 mt-4" />
 
         {/* Abholung Accordion */}
         {categories.map((category) => (
@@ -134,12 +157,20 @@ const DeliveryCategoriesScreen = () => {
               className="p-4 flex-row items-center justify-between bg-primary/5"
             >
               <View className="flex-row items-center gap-3">
-                <Text className="text-2xl">{category.icon}</Text>
+                <Image
+                  source={category.image}
+                  contentFit="cover"
+                  cachePolicy="memory-disk"
+                  transition={200}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 8,
+                  }}
+                />
                 <Text className="text-lg font-semibold">{category.name}</Text>
               </View>
-              <Text className="text-lg">
-                {expandedCategory === category.id ? "−" : "+"}
-              </Text>
+              <ChevronRight className="w-6 h-6 text-foreground" />
             </TouchableOpacity>
 
             {expandedCategory === category.id && (
@@ -162,7 +193,7 @@ const DeliveryCategoriesScreen = () => {
                           );
                         }
                       }}
-                      className="p-4 flex-row items-center justify-between bg-secondary/20 border-b border-border/30"
+                      className="p-4 flex-row items-center justify-between bg-secondary/20 border-b border-red-500/40"
                     >
                       <View className="flex-row items-center gap-3 flex-1">
                         <Image
@@ -187,13 +218,7 @@ const DeliveryCategoriesScreen = () => {
                           </Text>
                         </View>
                       </View>
-                      <Text className="text-lg">
-                        {subcategory.products?.length === 1
-                          ? "→"
-                          : expandedSubcategory === subcategory.id
-                          ? "−"
-                          : "+"}
-                      </Text>
+                      <ChevronRight className="w-6 h-6 text-foreground" />
                     </TouchableOpacity>
 
                     {expandedSubcategory === subcategory.id && (
@@ -205,7 +230,7 @@ const DeliveryCategoriesScreen = () => {
                               // Navigate to specific product form
                               router.push(`/delivery/${product.id}` as any);
                             }}
-                            className="p-3 pl-8 flex-row items-center justify-between border-b border-border/50"
+                            className="p-3 pl-8 flex-row items-center justify-between border-b border-border/40"
                           >
                             <View className="flex-row items-center gap-3 flex-1">
                               <Image
@@ -225,7 +250,7 @@ const DeliveryCategoriesScreen = () => {
                                 </Text>
                               </View>
                             </View>
-                            <Text className="text-primary">→</Text>
+                            <ChevronRight className="w-6 h-6 text-foreground" />
                           </TouchableOpacity>
                         ))}
                       </View>

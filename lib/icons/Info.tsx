@@ -1,4 +1,39 @@
-import { Info } from 'lucide-react-native';
-import { iconWithClassName } from './iconWithClassName';
-iconWithClassName(Info);
-export { Info };
+import {
+  ShoppingCart,
+  Link,
+  Calendar,
+  Mail,
+  Truck,
+  AlertTriangle,
+  HelpCircle,
+  Car,
+  Plane,
+  Bus,
+  Forklift,
+} from "lucide-react-native";
+import { iconWithClassName } from "./iconWithClassName";
+iconWithClassName(ShoppingCart);
+iconWithClassName(Link);
+iconWithClassName(Calendar);
+iconWithClassName(Mail);
+iconWithClassName(Truck);
+iconWithClassName(AlertTriangle);
+iconWithClassName(HelpCircle);
+iconWithClassName(Car);
+iconWithClassName(Plane);
+iconWithClassName(Bus);
+iconWithClassName(Forklift);
+
+export {
+  ShoppingCart,
+  Link,
+  Calendar,
+  Mail,
+  Truck,
+  AlertTriangle,
+  HelpCircle,
+  Car,
+  Plane,
+  Bus,
+  Forklift,
+};

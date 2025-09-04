@@ -18,10 +18,9 @@
         "backgroundColor": "#000000"
       }
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
+      "buildNumber": "4",
       "supportsTablet": true,
       "bundleIdentifier": "com.meterstein.app",
       "infoPlist": {
@@ -29,19 +28,18 @@
       }
     },
     "android": {
+      "buildNumber": "2",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.meterstein.app"
     },
     "web": {
       "bundler": "metro",
       "output": "static"
     },
-    "plugins": [
-      "expo-router",
-      "expo-mail-composer"
-    ],
+    "plugins": ["expo-router", "expo-mail-composer"],
     "experiments": {
       "typedRoutes": true
     },

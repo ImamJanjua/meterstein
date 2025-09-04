@@ -10,9 +10,12 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase URL or anon key");
 }
 
+// Platform-specific storage configuration
+const storage = Platform.OS === "web" ? undefined : AsyncStorage;
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    storage: AsyncStorage,
+    storage: storage,
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,

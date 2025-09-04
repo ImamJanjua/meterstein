@@ -176,16 +176,20 @@ Gesendet über Meterstein
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="gap-4 p-6 bg-secondary/30">
+        <View className="mb-8 mt-8 items-center">
+          <Text className="text-3xl font-bold text-red-500">Reklamation</Text>
+        </View>
+
+        <View className="gap-4 p-4">
           <View className="gap-2">
-            <Text className="text-sm font-medium">Name des Kunden</Text>
+            <Text className="font-medium">Name des Kunden</Text>
             <Input
               value={clientName}
               onChangeText={(text) => setClientName(text)}
             />
           </View>
           <View className="gap-2">
-            <Text className="text-sm font-medium">Was ist kaputt?</Text>
+            <Text className="font-medium">Was ist kaputt?</Text>
             <Textarea
               value={whatIsBroken}
               onChangeText={(text) => setWhatIsBroken(text)}
@@ -193,7 +197,7 @@ Gesendet über Meterstein
           </View>
 
           <View className="gap-2">
-            <Text className="text-sm font-medium">Wer ist verantwortlich?</Text>
+            <Text className=" font-medium">Wer ist verantwortlich?</Text>
             <RadioGroup
               value={whoIsResponsible}
               onValueChange={setWhoIsResponsible}
@@ -209,8 +213,8 @@ Gesendet über Meterstein
             </RadioGroup>
           </View>
 
-          <View className="gap-2">
-            <Text className="text-sm font-medium">Was ist passiert?</Text>
+          <View className="gap-2 mt-2">
+            <Text className=" font-medium">Was ist passiert?</Text>
             <Textarea
               value={whatHappened}
               onChangeText={(text) => setWhatHappened(text)}
@@ -218,14 +222,14 @@ Gesendet über Meterstein
           </View>
 
           <View className="gap-2">
-            <Text className="text-sm font-medium">Bilder der Reklamation</Text>
+            <Text className=" font-medium">Bilder der Reklamation</Text>
             <Button variant="outline" onPress={pickImages}>
               <Text>Bilder auswählen ({images.length}/5)</Text>
             </Button>
 
             {images.length > 0 && (
               <View className="gap-3">
-                <Text className="text-xs text-muted-foreground">
+                <Text className=" text-muted-foreground">
                   {images.length} Bild{images.length !== 1 ? "er" : ""}{" "}
                   ausgewählt
                 </Text>
@@ -255,7 +259,10 @@ Gesendet über Meterstein
             )}
           </View>
 
-          <Button className="w-full" onPress={sendReklamation}>
+          <Button
+            className="w-full mb-8 mt-8 bg-red-500"
+            onPress={sendReklamation}
+          >
             <Text>Absenden</Text>
           </Button>
         </View>

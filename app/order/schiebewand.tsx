@@ -5,6 +5,8 @@ import {
   Platform,
   Image as RNImage,
   TouchableOpacity,
+  Modal,
+  Dimensions,
 } from "react-native";
 import { Image } from "expo-image";
 import React from "react";
@@ -20,6 +22,9 @@ import { toast } from "sonner-native";
 import { EMAIL_RECIPIENTS } from "~/lib/constants";
 
 const Schiebewand = () => {
+  // Image zoom state
+  const [isImageModalVisible, setIsImageModalVisible] = React.useState(false);
+
   // Customer and measurement fields
   const [nameKunde, setNameKunde] = React.useState("");
   const [measurementA, setMeasurementA] = React.useState("");
@@ -30,14 +35,10 @@ const Schiebewand = () => {
   const [griffVonAussen, setGriffVonAussen] = React.useState("");
 
   // Zubehör state
-  const [windwaechter, setWindwaechter] = React.useState(false);
-  const [sonnenwaechter, setSonnenwaechter] = React.useState(false);
-  const [regensensor, setRegensensor] = React.useState(false);
-  const [fernbedienung5Kanal, setFernbedienung5Kanal] = React.useState(false);
-  const [fernbedienung1Kanal, setFernbedienung1Kanal] = React.useState(false);
+  const [bueren, setBueren] = React.useState(false);
+  const [absperrbar, setAbsperrbar] = React.useState(false);
 
   // Form fields state
-  const [stoff, setStoff] = React.useState("");
   const [wichtiges, setWichtiges] = React.useState("");
   const [images, setImages] = React.useState<string[]>([]);
 
@@ -56,12 +57,8 @@ const Schiebewand = () => {
     setMeasurementB("");
     setFarbe("");
     setGriffVonAussen("");
-    setWindwaechter(false);
-    setSonnenwaechter(false);
-    setRegensensor(false);
-    setFernbedienung5Kanal(false);
-    setFernbedienung1Kanal(false);
-    setStoff("");
+    setBueren(false);
+    setAbsperrbar(false);
     setWichtiges("");
     setImages([]);
   }
@@ -131,13 +128,6 @@ const Schiebewand = () => {
       return;
     }
 
-    if (!stoff.trim()) {
-      toast.error("Stoff erforderlich", {
-        description: "Bitte geben Sie die Stoffinformationen ein.",
-      });
-      return;
-    }
-
     if (images.length === 0) {
       toast.error("Bilder erforderlich", {
         description: "Bitte fügen Sie mindestens ein Bild hinzu.",
@@ -145,14 +135,12 @@ const Schiebewand = () => {
       return;
     }
 
-    // Compose email body
+    // Validate Zubehör selection
     const selectedZubehoer = [];
-    if (windwaechter) selectedZubehoer.push("Windwächter");
-    if (sonnenwaechter) selectedZubehoer.push("Sonnenwächter");
-    if (regensensor) selectedZubehoer.push("Regensensor");
-    if (fernbedienung5Kanal) selectedZubehoer.push("5 Kanal Fernbedienung");
-    if (fernbedienung1Kanal) selectedZubehoer.push("1 Kanal Fernbedienung");
+    if (bueren) selectedZubehoer.push("Bürsten");
+    if (absperrbar) selectedZubehoer.push("Absperrbar");
 
+    // Compose email body
     const emailBody = `
 Bestellung - Schiebewand
 
@@ -166,15 +154,8 @@ Farbe: ${farbe || "Nicht ausgewählt"}
 
 Griff von außen: ${griffVonAussen || "Nicht ausgewählt"}
 
-Zubehör:
-${
-  selectedZubehoer.length > 0
-    ? selectedZubehoer.join(", ")
-    : "Kein Zubehör ausgewählt"
-}
-
-Stoff:
-${stoff}
+Zusatz:
+${selectedZubehoer.join(", ")}
 
 Wichtiges:
 ${wichtiges || "Nichts angegeben"}
@@ -216,25 +197,35 @@ Gesendet über Meterstein
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       className="flex-1"
+      style={{ flex: 1 }}
     >
       <ScrollView
         className="flex-1"
-        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 100 }}
       >
         <View className="gap-4 p-4 bg-background/30">
+          <View className="mt-8 items-center">
+            <Text className="text-3xl font-bold text-red-500">Schiebewand</Text>
+          </View>
+
           {/* Product Image */}
-          <Image
-            source={require("~/assets/images/schiebewand-main.webp")}
-            contentFit="contain"
-            cachePolicy="memory-disk"
-            transition={200}
-            style={{
-              width: "100%",
-              height: 300,
-            }}
-          />
+          <TouchableOpacity
+            onPress={() => setIsImageModalVisible(true)}
+            activeOpacity={0.8}
+          >
+            <Image
+              source={require("~/assets/images/schiebewand-main.webp")}
+              contentFit="contain"
+              cachePolicy="memory-disk"
+              transition={200}
+              style={{
+                width: "100%",
+                height: 300,
+              }}
+            />
+          </TouchableOpacity>
 
           {/* Name Kunde Section */}
           <View className="gap-2">
@@ -255,9 +246,7 @@ Gesendet über Meterstein
               placeholder="Maß eingeben..."
               keyboardType="numeric"
             />
-            <Text className="text-sm text-muted-foreground">
-              in mm Innenkante - Innenkante -60mm
-            </Text>
+            <Text className="text-muted-foreground">in mm Innenkante</Text>
           </View>
 
           {/* Measurement B Section */}
@@ -269,9 +258,7 @@ Gesendet über Meterstein
               placeholder="Maß eingeben..."
               keyboardType="numeric"
             />
-            <Text className="text-sm text-muted-foreground">
-              in mm Außenkante - Außenkante
-            </Text>
+            <Text className="text-muted-foreground">in mm</Text>
           </View>
 
           {/* Farbe Section */}
@@ -312,24 +299,18 @@ Gesendet über Meterstein
 
           {/* Zubehör Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Zubehör *</Text>
+            <Text className="text-lg font-semibold">Zusatz</Text>
             <CheckboxWithLabel
               label="Bürsten"
-              checked={windwaechter}
-              onToggle={() => setWindwaechter(!windwaechter)}
+              checked={bueren}
+              onToggle={() => setBueren(!bueren)}
             />
 
             <CheckboxWithLabel
               label="Absperrbar"
-              checked={sonnenwaechter}
-              onToggle={() => setSonnenwaechter(!sonnenwaechter)}
+              checked={absperrbar}
+              onToggle={() => setAbsperrbar(!absperrbar)}
             />
-          </View>
-
-          {/* Stoff Section */}
-          <View className="gap-2">
-            <Text className="text-lg font-semibold">Stoff *</Text>
-            <Textarea value={stoff} onChangeText={setStoff} />
           </View>
 
           {/* Wichtiges Section */}
@@ -382,11 +363,67 @@ Gesendet über Meterstein
           </View>
 
           {/* Send Button */}
-          <Button onPress={sendOrder}>
-            <Text>Senden</Text>
+          <Button onPress={sendOrder} className="bg-red-500 mb-8 mt-8">
+            <Text className="text-foreground">Senden</Text>
           </Button>
         </View>
       </ScrollView>
+
+      {/* Image Zoom Modal */}
+      <Modal
+        visible={isImageModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsImageModalVisible(false)}
+      >
+        <View className="flex-1 bg-black/90">
+          {/* Image Container */}
+          <View className="flex-1 justify-center items-center">
+            {/* Close Button */}
+            <TouchableOpacity
+              onPress={() => setIsImageModalVisible(false)}
+              className="absolute top-20 w-14 h-14 right-8 items-center justify-center z-20 bg-red-500 rounded-full p-2 shadow-lg"
+              activeOpacity={0.7}
+            >
+              <Text className="text-white text-xl font-bold">✕</Text>
+            </TouchableOpacity>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              maximumZoomScale={3.0}
+              minimumZoomScale={1.0}
+              contentContainerStyle={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              style={{ flex: 1 }}
+            >
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                maximumZoomScale={3.0}
+                minimumZoomScale={1.0}
+                contentContainerStyle={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                style={{ flex: 1 }}
+              >
+                <Image
+                  source={require("~/assets/images/schiebewand-main.webp")}
+                  contentFit="contain"
+                  cachePolicy="memory-disk"
+                  transition={200}
+                  style={{
+                    width: Dimensions.get("window").width * 0.85,
+                    height: Dimensions.get("window").height * 0.8,
+                  }}
+                />
+              </ScrollView>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 };

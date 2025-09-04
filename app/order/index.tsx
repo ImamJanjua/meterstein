@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { Image } from "expo-image";
 import { Text } from "~/components/ui/text";
 import { Card } from "~/components/ui/card";
+import { ChevronRight } from "~/lib/icons/index";
 
 const OrderCategoriesScreen = () => {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
@@ -15,7 +16,7 @@ const OrderCategoriesScreen = () => {
     {
       id: "kunde",
       name: "Kunde",
-      icon: "👤",
+      image: require("~/assets/images/kunde-icon.webp"),
       subcategories: [
         {
           id: "markisen",
@@ -203,7 +204,7 @@ const OrderCategoriesScreen = () => {
     {
       id: "lager",
       name: "Lager",
-      icon: "📦",
+      image: require("~/assets/images/lager-icon.webp"),
       subcategories: [
         {
           id: "beton",
@@ -312,137 +313,163 @@ const OrderCategoriesScreen = () => {
 
   return (
     <ScrollView className="flex-1 bg-background">
-      <View className="p-4 gap-3">
-        {categories.map((category) => (
-          <Card key={category.id} className="overflow-hidden">
-            <TouchableOpacity
-              onPress={() =>
-                setExpandedCategory(
-                  expandedCategory === category.id ? null : category.id
-                )
-              }
-              className="p-4 flex-row items-center justify-between bg-primary/5"
-            >
-              <View className="flex-row items-center gap-3">
-                <Text className="text-2xl">{category.icon}</Text>
-                <Text className="text-lg font-semibold">{category.name}</Text>
-              </View>
-              <Text className="text-lg">
-                {expandedCategory === category.id ? "−" : "+"}
-              </Text>
-            </TouchableOpacity>
+      <View className="p-4 pb-8 gap-4 flex-1 justify-center">
+        {/* Header */}
+        <View className="mb-16 mt-8 items-center">
+          <Text className="text-3xl font-bold text-red-500 mb-2">
+            Bestellung
+          </Text>
+          <Text className="text-lg text-muted-foreground">
+            Wählen Sie eine Kategorie aus
+          </Text>
+        </View>
+        {categories.map((category, index) => (
+          <View key={category.id}>
+            <Card className="overflow-hidden">
+              <TouchableOpacity
+                onPress={() =>
+                  setExpandedCategory(
+                    expandedCategory === category.id ? null : category.id
+                  )
+                }
+                className="p-4 flex-row items-center justify-between bg-primary/5"
+              >
+                <View className="flex-row items-center gap-3">
+                  <Image
+                    source={category.image}
+                    contentFit="cover"
+                    cachePolicy="memory-disk"
+                    transition={200}
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 8,
+                    }}
+                  />
+                  <Text className="text-lg font-semibold">{category.name}</Text>
+                </View>
+                <ChevronRight className="w-6 h-6 text-foreground" />
+              </TouchableOpacity>
 
-            {expandedCategory === category.id && (
-              <View className="border-t border-border">
-                {category.subcategories.map((subcategory) => (
-                  <View key={subcategory.id}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        // If subcategory has only one product, navigate directly to it
-                        if (subcategory.products?.length === 1) {
-                          router.push(
-                            `/order/${subcategory.products[0].id}` as any
-                          );
-                        } else {
-                          // Otherwise, toggle the accordion
-                          setExpandedSubcategory(
-                            expandedSubcategory === subcategory.id
-                              ? null
-                              : subcategory.id
-                          );
-                        }
-                      }}
-                      className="p-4 flex-row items-center justify-between bg-secondary/20 border-b border-border/30"
-                    >
-                      <View className="flex-row items-center gap-3 flex-1">
-                        <Image
-                          source={subcategory.image}
-                          contentFit="cover"
-                          cachePolicy="memory-disk"
-                          transition={200}
-                          style={{
-                            width: 60,
-                            height: 60,
-                            borderRadius: 8,
-                          }}
-                        />
-                        <View className="flex-1">
-                          <Text className="font-medium text-lg">
-                            {subcategory.name}
-                          </Text>
-                          <Text className="text-sm text-muted-foreground">
-                            {subcategory.products?.length === 1
-                              ? "Direkt zum Produkt"
-                              : `${subcategory.products?.length} Produkte verfügbar`}
-                          </Text>
-                        </View>
-                      </View>
-                      <Text className="text-lg">
-                        {subcategory.products?.length === 1
-                          ? "→"
-                          : expandedSubcategory === subcategory.id
-                          ? "−"
-                          : "+"}
-                      </Text>
-                    </TouchableOpacity>
-
-                    {expandedSubcategory === subcategory.id && (
-                      <View className="bg-background">
-                        {subcategory.products?.map((product) => (
-                          <TouchableOpacity
-                            key={product.id}
-                            onPress={() => {
-                              // Navigate to specific product form
-                              router.push(`/order/${product.id}` as any);
+              {expandedCategory === category.id && (
+                <View className="border-t border-border">
+                  {category.subcategories.map((subcategory) => (
+                    <View key={subcategory.id}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          // If subcategory has only one product, navigate directly to it
+                          if (subcategory.products?.length === 1) {
+                            router.push(
+                              `/order/${subcategory.products[0].id}` as any
+                            );
+                          } else {
+                            // Otherwise, toggle the accordion
+                            setExpandedSubcategory(
+                              expandedSubcategory === subcategory.id
+                                ? null
+                                : subcategory.id
+                            );
+                          }
+                        }}
+                        className="p-4 flex-row items-center justify-between bg-secondary/20 border-t border-red-500/40 border-b border-red-500/40"
+                      >
+                        <View className="flex-row items-center gap-3 flex-1">
+                          <Image
+                            source={subcategory.image}
+                            contentFit="cover"
+                            cachePolicy="memory-disk"
+                            transition={200}
+                            style={{
+                              width: 60,
+                              height: 60,
+                              borderRadius: 8,
                             }}
-                            className="p-3 pl-8 flex-row items-center justify-between border-b border-border/50"
-                          >
-                            <View className="flex-row items-center gap-3 flex-1">
-                              <Image
-                                source={product.image}
-                                contentFit="cover"
-                                cachePolicy="memory-disk"
-                                transition={200}
-                                style={{
-                                  width: 50,
-                                  height: 50,
-                                  borderRadius: 6,
-                                }}
-                              />
-                              <View className="flex-1">
-                                <Text className="font-medium">
-                                  {product.name}
-                                </Text>
+                          />
+                          <View className="flex-1">
+                            <Text className="font-medium text-lg">
+                              {subcategory.name}
+                            </Text>
+                            <Text className="text-sm text-muted-foreground">
+                              {subcategory.products?.length === 1
+                                ? "Direkt zum Produkt"
+                                : `${subcategory.products?.length} Produkte verfügbar`}
+                            </Text>
+                          </View>
+                        </View>
+                        <ChevronRight className="w-6 h-6 text-foreground" />
+                      </TouchableOpacity>
+
+                      {expandedSubcategory === subcategory.id && (
+                        <View className="bg-background">
+                          {subcategory.products?.map((product) => (
+                            <TouchableOpacity
+                              key={product.id}
+                              onPress={() => {
+                                // Navigate to specific product form
+                                router.push(`/order/${product.id}` as any);
+                              }}
+                              className="p-3 pl-8 flex-row items-center justify-between border-b border-border/40"
+                            >
+                              <View className="flex-row items-center gap-3 flex-1">
+                                <Image
+                                  source={product.image}
+                                  contentFit="cover"
+                                  cachePolicy="memory-disk"
+                                  transition={200}
+                                  style={{
+                                    width: 50,
+                                    height: 50,
+                                    borderRadius: 6,
+                                  }}
+                                />
+                                <View className="flex-1">
+                                  <Text className="font-medium">
+                                    {product.name}
+                                  </Text>
+                                </View>
                               </View>
-                            </View>
-                            <Text className="text-primary">→</Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
-                    )}
-                  </View>
-                ))}
-              </View>
+                              <ChevronRight className="w-6 h-6 text-foreground" />
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      )}
+                    </View>
+                  ))}
+                </View>
+              )}
+            </Card>
+            {index < categories.length - 1 && (
+              <View className="h-px bg-red-500 mx-4 my-2 mt-6" />
             )}
-          </Card>
+          </View>
         ))}
-
-        {/* Separator */}
-        <View className="h-px bg-border my-4" />
-
         {/* Direct Navigation Buttons */}
+        <View className="h-px bg-red-500 mx-4 my-2 mt-4" />
+
         <Card className="overflow-hidden">
           <TouchableOpacity
             onPress={() => router.push("/order/werkzeugdefekt" as any)}
             className="p-4 flex-row items-center justify-between bg-primary/5"
           >
             <View className="flex-row items-center gap-3">
-              <Text className="text-2xl">🔧</Text>
+              <Image
+                source={require("~/assets/images/werkzeugdefekt-icon.webp")}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={200}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 8,
+                }}
+              />
               <Text className="text-lg font-semibold">Werkzeugdefekt</Text>
             </View>
-            <Text className="text-lg">→</Text>
+            <ChevronRight className="w-6 h-6 text-foreground" />
           </TouchableOpacity>
         </Card>
+
+        <View className="h-px bg-red-500 mx-4 my-2" />
 
         <Card className="overflow-hidden">
           <TouchableOpacity
@@ -450,12 +477,24 @@ const OrderCategoriesScreen = () => {
             className="p-4 flex-row items-center justify-between bg-primary/5"
           >
             <View className="flex-row items-center gap-3">
-              <Text className="text-2xl">❓</Text>
+              <Image
+                source={require("~/assets/images/sonstiges-icon.webp")}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={200}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 8,
+                }}
+              />
               <Text className="text-lg font-semibold">Sonstiges</Text>
             </View>
-            <Text className="text-lg">→</Text>
+            <ChevronRight className="w-6 h-6 text-foreground" />
           </TouchableOpacity>
         </Card>
+
+        <View className="h-px bg-red-500 mx-4 my-2" />
 
         <Card className="overflow-hidden">
           <TouchableOpacity
@@ -463,10 +502,20 @@ const OrderCategoriesScreen = () => {
             className="p-4 flex-row items-center justify-between bg-primary/5"
           >
             <View className="flex-row items-center gap-3">
-              <Text className="text-2xl">💳</Text>
+              <Image
+                source={require("~/assets/images/bauhauskarte-icon.webp")}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={200}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 8,
+                }}
+              />
               <Text className="text-lg font-semibold">Bauhauskarte</Text>
             </View>
-            <Text className="text-lg">→</Text>
+            <ChevronRight className="w-6 h-6 text-foreground" />
           </TouchableOpacity>
         </Card>
       </View>

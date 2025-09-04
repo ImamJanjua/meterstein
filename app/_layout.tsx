@@ -6,6 +6,8 @@ import {
   Theme,
   ThemeProvider,
 } from "@react-navigation/native";
+import { Text } from "~/components/ui/text";
+import { TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Stack, router, usePathname, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -19,6 +21,9 @@ import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { Toaster } from "sonner-native";
 import { supabase } from "~/lib/supabase";
 import * as SplashScreen from "expo-splash-screen";
+import { ChevronLeft } from "~/lib/icons/index";
+import { getAppRole } from "~/lib/jwt-utils";
+import { colorScheme } from "nativewind";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -41,20 +46,20 @@ const usePlatformSpecificSetup = Platform.select({
 });
 
 // Route Logger Component
-function RouteLogger() {
-  const pathname = usePathname();
-  const segments = useSegments();
+// function RouteLogger() {
+//   const pathname = usePathname();
+//   const segments = useSegments();
 
-  React.useEffect(() => {
-    console.log("📍 Current Route:", {
-      pathname,
-      segments,
-      fullPath: `/${segments.join("/")}`,
-    });
-  }, [pathname, segments]);
+//   React.useEffect(() => {
+//     console.log("📍 Current Route:", {
+//       pathname,
+//       segments,
+//       fullPath: `/${segments.join("/")}`,
+//     });
+//   }, [pathname, segments]);
 
-  return null;
-}
+//   return null;
+// }
 
 export default function RootLayout() {
   usePlatformSpecificSetup();
@@ -63,12 +68,18 @@ export default function RootLayout() {
 
   React.useEffect(() => {
     async function prepare() {
+      colorScheme.set("dark");
       try {
         await SplashScreen.preventAutoHideAsync();
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // Don't navigate here, just set up the auth listener
         const { data } = supabase.auth.onAuthStateChange((event, session) => {
+          if (session?.access_token) {
+            const appRole = getAppRole(session.access_token);
+            console.log("🔐 App Role:", appRole);
+          }
+
           if (event === "INITIAL_SESSION") {
             // Store the session info but don't navigate yet
             if (session) {
@@ -132,20 +143,26 @@ export default function RootLayout() {
     <GestureHandlerRootView>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-        <RouteLogger />
+        {/* <RouteLogger /> */}
         <Stack>
           <Stack.Screen
             name="index"
             options={{
               title: "Meterstein",
-              headerRight: () => <ThemeToggle />,
+              headerTitleStyle: {
+                color: "#BE1D1C",
+              },
+              // headerRight: () => <ThemeToggle />,
             }}
           />
           <Stack.Screen
             name="home"
             options={{
               title: "Home",
-              headerRight: () => <ThemeToggle />,
+              headerTitleStyle: {
+                color: "#BE1D1C",
+              },
+              // headerRight: () => <ThemeToggle />,
             }}
           />
           <Stack.Screen
@@ -165,7 +182,26 @@ export default function RootLayout() {
           <Stack.Screen
             name="problem"
             options={{
-              title: "Problem",
+              title: "",
+              headerTitleAlign: "center",
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  className="flex-row items-center ml-2"
+                >
+                  <ChevronLeft className="w-6 h-6 text-red-500" />
+                  <Text className="text-lg font-semibold text-red-500">
+                    Home
+                  </Text>
+                </TouchableOpacity>
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="autos"
+            options={{
+              title: "Autos",
+              headerShown: false,
             }}
           />
           <Stack.Screen
@@ -173,6 +209,24 @@ export default function RootLayout() {
             options={{
               title: "Abnahme",
               headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="kontakt"
+            options={{
+              title: "",
+              headerTitleAlign: "center",
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  className="flex-row items-center ml-2"
+                >
+                  <ChevronLeft className="w-6 h-6 text-red-500" />
+                  <Text className="text-lg font-semibold text-red-500">
+                    Home
+                  </Text>
+                </TouchableOpacity>
+              ),
             }}
           />
           <Stack.Screen
@@ -185,14 +239,37 @@ export default function RootLayout() {
           <Stack.Screen
             name="frei"
             options={{
-              title: "Frei",
+              title: "",
+              headerTitleAlign: "center",
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  className="flex-row items-center ml-2"
+                >
+                  <ChevronLeft className="w-6 h-6 text-red-500" />
+                  <Text className="text-lg font-semibold text-red-500">
+                    Home
+                  </Text>
+                </TouchableOpacity>
+              ),
             }}
           />
           <Stack.Screen
-            name="phone-demo"
+            name="kalendar"
             options={{
-              title: "Telefon Demo",
-              headerRight: () => <ThemeToggle />,
+              title: "",
+              headerTitleAlign: "center",
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  className="flex-row items-center ml-2"
+                >
+                  <ChevronLeft className="w-6 h-6 text-red-500" />
+                  <Text className="text-lg font-semibold text-red-500">
+                    Home
+                  </Text>
+                </TouchableOpacity>
+              ),
             }}
           />
         </Stack>

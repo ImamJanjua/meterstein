@@ -3,23 +3,24 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Image as RNImage,
   TouchableOpacity,
+  Modal,
+  Dimensions,
 } from "react-native";
 import { Image } from "expo-image";
 import React from "react";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Label } from "~/components/ui/label";
-import * as ImagePicker from "expo-image-picker";
 import * as MailComposer from "expo-mail-composer";
 import { toast } from "sonner-native";
 import { EMAIL_RECIPIENTS } from "~/lib/constants";
 
 const Flexscheiben = () => {
+  // Image zoom state
+  const [isImageModalVisible, setIsImageModalVisible] = React.useState(false);
+
   // Art (Type)
   const [metall, setMetall] = React.useState(false);
   const [stein, setStein] = React.useState(false);
@@ -52,22 +53,22 @@ const Flexscheiben = () => {
     }
 
     const emailBody = `
-         Bestellung - Flexscheiben
-         
-         Stück: ${stueck || "Nicht angegeben"}
-         
-         Art:
-         - Metall: ${metall ? "Ja" : "Nein"}
-         - Stein: ${stein ? "Ja" : "Nein"}
-         - Fächerscheibe: ${faecherscheibe ? "Ja" : "Nein"}
-         
-         Größe:
-         - 125mm: ${groesse125mm ? "Ja" : "Nein"}
-         - 230mm: ${groesse230mm ? "Ja" : "Nein"}
-         
-         ---
-         Gesendet über Meterstein
-             `.trim();
+Bestellung - Flexscheiben
+
+Stück: ${stueck || "Nicht angegeben"}
+
+Art:
+- Metall: ${metall ? "Ja" : "Nein"}
+- Stein: ${stein ? "Ja" : "Nein"}
+- Fächerscheibe: ${faecherscheibe ? "Ja" : "Nein"}
+
+Größe:
+- 125mm: ${groesse125mm ? "Ja" : "Nein"}
+- 230mm: ${groesse230mm ? "Ja" : "Nein"}
+
+---
+Gesendet über Meterstein
+    `.trim();
 
     try {
       // Compose email
@@ -99,25 +100,37 @@ const Flexscheiben = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       className="flex-1"
+      style={{ flex: 1 }}
     >
       <ScrollView
         className="flex-1"
-        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 100 }}
       >
-        <View className="gap-4 p-4 bg-background/30">
+        <View className="gap-8 p-4 bg-background/30">
+          <View className="mt-8 items-center">
+            <Text className="text-3xl font-bold text-red-500">
+              Flexscheiben
+            </Text>
+          </View>
+
           {/* Product Image */}
-          <Image
-            source={require("~/assets/images/flexscheiben.webp")}
-            contentFit="contain"
-            cachePolicy="memory-disk"
-            transition={200}
-            style={{
-              width: "100%",
-              height: 300,
-            }}
-          />
+          <TouchableOpacity
+            onPress={() => setIsImageModalVisible(true)}
+            activeOpacity={0.8}
+          >
+            <Image
+              source={require("~/assets/images/flexscheiben.webp")}
+              contentFit="contain"
+              cachePolicy="memory-disk"
+              transition={200}
+              style={{
+                width: "100%",
+                height: 300,
+              }}
+            />
+          </TouchableOpacity>
 
           {/* Stück Section */}
           <View className="gap-2">
@@ -128,7 +141,7 @@ const Flexscheiben = () => {
               placeholder="Anzahl eingeben..."
               keyboardType="numeric"
             />
-            <Text className="text-sm text-muted-foreground">
+            <Text className="text-muted-foreground">
               Anzahl der Flexscheiben
             </Text>
           </View>
@@ -169,31 +182,70 @@ const Flexscheiben = () => {
           </View>
 
           {/* Send Button */}
-          <Button onPress={sendOrder}>
-            <Text>Senden</Text>
+          <Button onPress={sendOrder} className="bg-red-500 mb-8 mt-8">
+            <Text className="text-foreground">Senden</Text>
           </Button>
         </View>
       </ScrollView>
+
+      {/* Image Zoom Modal */}
+      <Modal
+        visible={isImageModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsImageModalVisible(false)}
+      >
+        <View className="flex-1 bg-black/90">
+          {/* Image Container */}
+          <View className="flex-1 justify-center items-center">
+            {/* Close Button */}
+            <TouchableOpacity
+              onPress={() => setIsImageModalVisible(false)}
+              className="absolute top-20 w-14 h-14 right-8 items-center justify-center z-20 bg-red-500 rounded-full p-2 shadow-lg"
+              activeOpacity={0.7}
+            >
+              <Text className="text-white text-xl font-bold">✕</Text>
+            </TouchableOpacity>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              maximumZoomScale={3.0}
+              minimumZoomScale={1.0}
+              contentContainerStyle={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              style={{ flex: 1 }}
+            >
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                maximumZoomScale={3.0}
+                minimumZoomScale={1.0}
+                contentContainerStyle={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                style={{ flex: 1 }}
+              >
+                <Image
+                  source={require("~/assets/images/flexscheiben.webp")}
+                  contentFit="contain"
+                  cachePolicy="memory-disk"
+                  transition={200}
+                  style={{
+                    width: Dimensions.get("window").width * 0.85,
+                    height: Dimensions.get("window").height * 0.8,
+                  }}
+                />
+              </ScrollView>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 };
-
-function RadioGroupItemWithLabel({
-  value,
-  onLabelPress,
-}: {
-  value: string;
-  onLabelPress: () => void;
-}) {
-  return (
-    <View className={"flex-row gap-2 items-center"}>
-      <RadioGroupItem aria-labelledby={`label-for-${value}`} value={value} />
-      <Label nativeID={`label-for-${value}`} onPress={onLabelPress}>
-        {value}
-      </Label>
-    </View>
-  );
-}
 
 function CheckboxWithLabel({
   label,
