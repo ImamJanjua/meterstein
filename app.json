@@ -18,7 +18,9 @@
         "backgroundColor": "#000000"
       }
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "buildNumber": "4",
       "supportsTablet": true,
@@ -37,9 +39,13 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static"
+      "output": "static",
+      "favicon": "./assets/images/icon.png"
     },
-    "plugins": ["expo-router", "expo-mail-composer"],
+    "plugins": [
+      "expo-router",
+      "expo-mail-composer"
+    ],
     "experiments": {
       "typedRoutes": true
     },
