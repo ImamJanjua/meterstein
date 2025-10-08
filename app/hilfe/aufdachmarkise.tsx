@@ -1,36 +1,19 @@
-import React from "react";
-import { View, StyleSheet, Platform } from "react-native";
-import { WebView } from "react-native-webview";
+import React, { useEffect } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 
 const Abnahme = () => {
-  // For web platform, use iframe instead of WebView
-  if (Platform.OS === "web") {
-    return (
-      <View style={styles.container}>
-        <iframe
-          src="https://www.meterstein.de/app/montageanleitungen/w350_mit_zip.pdf"
-          style={styles.webview}
-          title="Aufdachmarkise"
-          allowFullScreen
-        />
-      </View>
-    );
-  }
+  const pdfUrl = "https://www.meterstein.de/app/montageanleitungen/w350_mit_zip.pdf";
 
-  // For native platforms, use WebView
+  useEffect(() => {
+    // Öffne in neuem Tab
+    window.open(pdfUrl, "_blank");
+  }, []);
+
   return (
     <View style={styles.container}>
-      <WebView
-        source={{
-          uri: "https://www.meterstein.de/app/montageanleitungen/w350_mit_zip.pdf",
-        }}
-        style={styles.webview}
-        startInLoadingState={true}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        allowsInlineMediaPlayback={true}
-        mediaPlaybackRequiresUserAction={false}
-      />
+      <View style={styles.contentContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
     </View>
   );
 };
@@ -38,11 +21,12 @@ const Abnahme = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f5f5f5",
   },
-  webview: {
+  contentContainer: {
     flex: 1,
-    width: "100%",
-    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

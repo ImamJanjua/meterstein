@@ -1,51 +1,19 @@
-import React from "react";
-import { View, StyleSheet, Platform, Dimensions } from "react-native";
-import { WebView } from "react-native-webview";
-
+import React, { useEffect } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 
 const Abnahme = () => {
-  const [screenData, setScreenData] = React.useState(Dimensions.get('window'));
-  
-  // Listen for screen size changes
-  React.useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', ({ window }) => {
-      setScreenData(window);
-    });
-    return () => subscription?.remove();
+  const pdfUrl = "https://www.meterstein.de/app/montageanleitungen/montageanleitung-Cube-Line-compact.pdf";
+
+  useEffect(() => {
+    // Öffne in neuem Tab
+    window.open(pdfUrl, "_blank");
   }, []);
 
-  const pdfUrl = "https://www.meterstein.de/app/montageanleitungen/montageanleitung-Cube-Line-compact.pdf";
-  const isMobile = screenData.width < 768;
-
-  // For web platform, use iframe with mobile-optimized settings
-  if (Platform.OS === "web") {
-    return (
-      <View style={styles.container}>
-        <iframe
-          src={`${pdfUrl}#toolbar=1&navpanes=1&scrollbar=1&view=FitH&zoom=page-width`}
-          style={styles.webview}
-          title="cube line compact"
-          allowFullScreen
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-        />
-      </View>
-    );
-  }
-
-  // For native platforms, use WebView
   return (
     <View style={styles.container}>
-      <WebView
-        source={{
-          uri: pdfUrl,
-        }}
-        style={styles.webview}
-        startInLoadingState={true}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        allowsInlineMediaPlayback={true}
-        mediaPlaybackRequiresUserAction={false}
-      />
+      <View style={styles.contentContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
     </View>
   );
 };
@@ -53,11 +21,12 @@ const Abnahme = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f5f5f5",
   },
-  webview: {
+  contentContainer: {
     flex: 1,
-    width: "100%",
-    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

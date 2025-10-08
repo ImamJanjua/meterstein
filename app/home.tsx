@@ -22,7 +22,6 @@ import { supabase } from "~/lib/supabase";
 import { getAppRole, getUserEmail, getUserId } from "~/lib/jwt-utils";
 
 const HomeScreen = () => {
-  const { isDarkColorScheme } = useColorScheme();
   const [appRole, setAppRole] = React.useState<string | null>(null);
   const [screenWidth, setScreenWidth] = React.useState(Dimensions.get('window').width);
 
@@ -156,10 +155,10 @@ const HomeScreen = () => {
   });
 
   return (
-    <ScrollView className="flex-1 bg-background">
+    <ScrollView className="flex-1 bg-background" showsVerticalScrollIndicator={false}>
       <View className="p-4">
         {/* Header */}
-        <View className="items-center justify-center -mt-12">
+        <View className="items-center justify-center -mt-16 -mb-8">
           <Image
             source={require("../assets/images/icon-dark-transparent.png")}
             style={getLogoSize()}
