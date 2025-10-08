@@ -112,8 +112,8 @@ const HomeScreen = () => {
       return item.id !== "lieferung" && item.id !== "kontakt";
     }
     if (appRole === "montage") {
-      // Hide only "lieferung" for montage role
-      return item.id !== "lieferung";
+      // Show all items for montage role (including "lieferung")
+      return true;
     }
     return true; // Show all items for other roles
   });
