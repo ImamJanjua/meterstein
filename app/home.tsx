@@ -15,6 +15,7 @@ import {
   Package,
   Truck,
   ClipboardList,
+  LogOut,
 } from "lucide-react-native";
 import { Card } from "~/components/ui/card";
 import { supabase } from "~/lib/supabase";
@@ -23,6 +24,17 @@ import { getAppRole, getUserEmail, getUserId } from "~/lib/jwt-utils";
 const HomeScreen = () => {
   const { isDarkColorScheme } = useColorScheme();
   const [appRole, setAppRole] = React.useState<string | null>(null);
+
+  // Logout function
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      // Navigate to login or home page after logout
+      router.replace("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   // Get user info from token
   React.useEffect(() => {
@@ -157,6 +169,18 @@ const HomeScreen = () => {
               </Text>
             </TouchableOpacity>
           ))}
+        </View>
+
+        {/* Logout Button */}
+        <View className="mt-8 mb-4 items-center">
+          <TouchableOpacity
+            onPress={handleLogout}
+            className="flex-row items-center justify-center px-6 py-3 bg-red-500/10 rounded-lg border border-red-500/20 self-center"
+            activeOpacity={0.7}
+          >
+            <LogOut size={18} className="text-red-500 mr-2" />
+            <Text className="text-red-500 font-semibold text-sm">Abmelden</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
