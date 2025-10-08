@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, TouchableOpacity, Image } from "react-native";
+import { View, ScrollView, TouchableOpacity, Image, Dimensions } from "react-native";
 import { Text } from "~/components/ui/text";
 import { router } from "expo-router";
 import { useColorScheme } from "~/lib/useColorScheme";
@@ -24,6 +24,7 @@ import { getAppRole, getUserEmail, getUserId } from "~/lib/jwt-utils";
 const HomeScreen = () => {
   const { isDarkColorScheme } = useColorScheme();
   const [appRole, setAppRole] = React.useState<string | null>(null);
+  const [screenWidth, setScreenWidth] = React.useState(Dimensions.get('window').width);
 
   // Logout function
   const handleLogout = async () => {
@@ -59,6 +60,30 @@ const HomeScreen = () => {
 
     getUserInfo();
   }, []);
+
+  // Listen for screen size changes
+  React.useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setScreenWidth(window.width);
+    });
+
+    return () => subscription?.remove();
+  }, []);
+
+  // Get responsive logo size
+  const getLogoSize = () => {
+    if (Platform.OS !== "web") {
+      return { width: 256, height: 256 };
+    }
+
+    // Responsive sizes based on screen width
+    if (screenWidth < 480) return { width: 400, height: 400 };      // Very small mobile
+    if (screenWidth < 640) return { width: 450, height: 450 };       // Mobile
+    if (screenWidth < 768) return { width: 500, height: 500 };     // Small tablet
+    if (screenWidth < 1024) return { width: 550, height: 550 };   // Large tablet
+    if (screenWidth < 1280) return { width: 600, height: 600 };   // Small desktop
+    return { width: 650, height: 650 };                           // Large desktop
+  };
 
   const allNavigationItems = [
     {
@@ -134,24 +159,13 @@ const HomeScreen = () => {
     <ScrollView className="flex-1 bg-background">
       <View className="p-4">
         {/* Header */}
-        <View className="items-center justify-center mb-12">
-          {isDarkColorScheme ? (
-            <Image
-              source={require("../assets/images/icon-dark-transparent.png")}
-              className={Platform.OS === "web" ? "w-16 h-16" : "w-64 h-64"}
-              resizeMode="contain"
-            />
-          ) : (
-            <Image
-              source={require("../assets/images/icon-transparent.png")}
-              className={
-                Platform.OS === "web" ? "w-12 h-12 mt-12" : "w-40 h-40 mt-12"
-              }
-              resizeMode="contain"
-            />
-          )}
+        <View className="items-center justify-center -mt-12">
+          <Image
+            source={require("../assets/images/icon-dark-transparent.png")}
+            style={getLogoSize()}
+            resizeMode="contain"
+          />
         </View>
-
         {/* Grid Layout */}
         <View className="flex-row flex-wrap justify-between">
           {navigationItems.map((item) => (
