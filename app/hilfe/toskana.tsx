@@ -1,17 +1,32 @@
 import React from "react";
-import { View, StyleSheet, Platform } from "react-native";
+import { View, StyleSheet, Platform, Dimensions } from "react-native";
 import { WebView } from "react-native-webview";
 
+
 const Abnahme = () => {
-    // For web platform, use iframe instead of WebView
+  const [screenData, setScreenData] = React.useState(Dimensions.get('window'));
+  
+  // Listen for screen size changes
+  React.useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setScreenData(window);
+    });
+    return () => subscription?.remove();
+  }, []);
+
+  const pdfUrl = "https://www.meterstein.de/app/montageanleitungen/montageanleitung-toscana.pdf";
+  const isMobile = screenData.width < 768;
+
+  // For web platform, use iframe with mobile-optimized settings
   if (Platform.OS === "web") {
     return (
       <View style={styles.container}>
         <iframe
-          src="https://www.meterstein.de/app/montageanleitungen/montageanleitung-toscana.pdf"
+          src={`${pdfUrl}#toolbar=1&navpanes=1&scrollbar=1&view=FitH&zoom=page-width`}
           style={styles.webview}
           title="toskana"
           allowFullScreen
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
         />
       </View>
     );
@@ -22,7 +37,7 @@ const Abnahme = () => {
     <View style={styles.container}>
       <WebView
         source={{
-          uri: "https://www.meterstein.de/app/montageanleitungen/montageanleitung-toscana.pdf",
+          uri: pdfUrl,
         }}
         style={styles.webview}
         startInLoadingState={true}

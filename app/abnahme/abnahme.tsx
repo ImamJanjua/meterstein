@@ -3,15 +3,19 @@ import { View, StyleSheet, Platform } from "react-native";
 import { WebView } from "react-native-webview";
 
 const Abnahme = () => {
-  // For web platform, use an iframe instead of WebView
+  const abnahmeUrl = "https://www.meterstein.de/abnahmeprotokoll/";
+
+  // For web platform, use iframe with mobile-optimized settings
   if (Platform.OS === "web") {
     return (
       <View style={styles.container}>
         <iframe
-          src="https://www.meterstein.de/abnahmeprotokoll/"
+          src={abnahmeUrl}
           style={styles.webview}
           title="Abnahmeprotokoll"
           allowFullScreen
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+          allow="autoplay; camera; microphone; geolocation"
         />
       </View>
     );

@@ -17,7 +17,7 @@ const AutosCategoriesScreen = () => {
       items: [
         {
           id: "ford-5160",
-          name: "Ford A:MMS 5160 Check-Up",
+          name: "Ford A:MS 5160 Check-Up",
           description: "Fahrzeuginspektion durchführen",
           icon: Car,
         },
@@ -36,6 +36,12 @@ const AutosCategoriesScreen = () => {
         {
           id: "iveco-4115",
           name: "Iveco 2 A:D 4115 Check-Up",
+          description: "Fahrzeuginspektion durchführen",
+          icon: Bus,
+        },
+        {
+          id: "iveco-249",
+          name: "Iveco 3 A:MS 249 Check-Up",
           description: "Fahrzeuginspektion durchführen",
           icon: Bus,
         },
@@ -134,8 +140,8 @@ const AutosCategoriesScreen = () => {
                               ? "text-yellow-500"
                               : item.id.includes("ford") ||
                                 item.id.includes("opel")
-                              ? "text-red-500"
-                              : "text-foreground"
+                                ? "text-red-500"
+                                : "text-foreground"
                           }
                         />
                       )}

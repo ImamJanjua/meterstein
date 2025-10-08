@@ -3,7 +3,7 @@ import { View, StyleSheet, Platform } from "react-native";
 import { WebView } from "react-native-webview";
 
 const Abnahme = () => {
-  // For web platform, use an iframe instead of WebView
+  // For web platform, use iframe with mobile-optimized settings
   if (Platform.OS === "web") {
     return (
       <View style={styles.container}>
@@ -12,6 +12,8 @@ const Abnahme = () => {
           style={styles.webview}
           title="Teilabnahme"
           allowFullScreen
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+          allow="autoplay; camera; microphone; geolocation"
         />
       </View>
     );

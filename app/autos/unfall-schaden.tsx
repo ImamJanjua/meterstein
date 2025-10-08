@@ -32,7 +32,14 @@ const UnfallSchaden = () => {
   const [description, setDescription] = React.useState("");
   const [images, setImages] = React.useState<string[]>([]);
 
-  const vehicleOptions = ["Ford A:MS 5120", "Opel A:Y 783", "Iveco 1 A:V 8004"];
+  const vehicleOptions = [
+    "Ford A:MS 5160",
+    "Opel A:Y 783",
+    "Iveco 1 A:V 8004",
+    "Iveco 2 A:D 4115",
+    "Iveco 3 A:MS 249",
+    "Stapler"
+  ];
 
   function resetForm() {
     setSelectedVehicle("");
@@ -69,9 +76,8 @@ const UnfallSchaden = () => {
 
       if (images.length + newImages.length > 5) {
         toast.error("Zu viele Bilder", {
-          description: `Sie können maximal 5 Bilder auswählen. Sie haben bereits ${
-            images.length
-          } Bild${images.length !== 1 ? "er" : ""} ausgewählt.`,
+          description: `Sie können maximal 5 Bilder auswählen. Sie haben bereits ${images.length
+            } Bild${images.length !== 1 ? "er" : ""} ausgewählt.`,
         });
         return;
       }
@@ -126,22 +132,21 @@ Fahrzeug: ${selectedVehicle}
 
 Art des Schadens:
 ${selectedDamages
-  .map(
-    (damage) =>
-      `- ${damage.charAt(0).toUpperCase() + damage.slice(1)} (${getDamageLabel(
-        damage
-      )})`
-  )
-  .join("\n")}
+          .map(
+            (damage) =>
+              `- ${damage.charAt(0).toUpperCase() + damage.slice(1)} (${getDamageLabel(
+                damage
+              )})`
+          )
+          .join("\n")}
 
 Was ist passiert?:
 ${description}
 
-${
-  images.length > 0
-    ? `\nAnhänge: ${images.length} Bild${images.length !== 1 ? "er" : ""}`
-    : ""
-}
+${images.length > 0
+          ? `\nAnhänge: ${images.length} Bild${images.length !== 1 ? "er" : ""}`
+          : ""
+        }
 
 ---
 Gesendet über Meterstein
@@ -236,13 +241,13 @@ Gesendet über Meterstein
               activeOpacity={1}
               onPress={() => setShowVehiclePopover(false)}
             >
-              <View className="bg-background rounded-lg border border-border mx-4 max-w-sm w-full">
+              <View className="bg-background rounded-lg border border-border mx-4 max-w-sm w-full max-h-96">
                 <View className="p-4 border-b border-border">
                   <Text className="text-lg font-semibold text-center">
                     Fahrzeug auswählen
                   </Text>
                 </View>
-                <View className="max-h-64">
+                <ScrollView className="max-h-80" showsVerticalScrollIndicator={false}>
                   {vehicleOptions.map((vehicle) => (
                     <TouchableOpacity
                       key={vehicle}
@@ -250,11 +255,10 @@ Gesendet über Meterstein
                         setSelectedVehicle(vehicle);
                         setShowVehiclePopover(false);
                       }}
-                      className={`p-4 border-b border-border/50 ${
-                        selectedVehicle === vehicle
-                          ? "bg-primary/10 border-primary"
-                          : "bg-background"
-                      }`}
+                      className={`p-4 border-b border-border/50 ${selectedVehicle === vehicle
+                        ? "bg-primary/10 border-primary"
+                        : "bg-background"
+                        }`}
                     >
                       <Text
                         className={
@@ -267,7 +271,7 @@ Gesendet über Meterstein
                       </Text>
                     </TouchableOpacity>
                   ))}
-                </View>
+                </ScrollView>
               </View>
             </TouchableOpacity>
           </Modal>
@@ -382,11 +386,10 @@ function CheckboxWithLabel({
       className="flex-row gap-3 items-center py-3"
     >
       <View
-        className={`w-6 h-6 border-2 rounded ${
-          checked
-            ? "bg-primary border-primary"
-            : "bg-background border-muted-foreground"
-        } items-center justify-center`}
+        className={`w-6 h-6 border-2 rounded ${checked
+          ? "bg-primary border-primary"
+          : "bg-background border-muted-foreground"
+          } items-center justify-center`}
       >
         {checked && (
           <Text className="text-primary-foreground text-sm font-bold">✓</Text>

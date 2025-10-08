@@ -21,11 +21,13 @@ import { EMAIL_RECIPIENTS } from "~/lib/constants";
 
 const Sonstiges = () => {
   // Form fields state
+  const [kundenName, setKundenName] = React.useState("");
   const [artikel, setArtikel] = React.useState("");
   const [stueck, setStueck] = React.useState("");
   const [images, setImages] = React.useState<string[]>([]);
 
   function resetForm() {
+    setKundenName("");
     setArtikel("");
     setStueck("");
     setImages([]);
@@ -49,9 +51,8 @@ const Sonstiges = () => {
       // Check if adding new images would exceed the limit of 5
       if (images.length + newImages.length > 5) {
         toast.error("Zu viele Bilder", {
-          description: `Sie können maximal 5 Bilder auswählen. Sie haben bereits ${
-            images.length
-          } Bild${images.length !== 1 ? "er" : ""} ausgewählt.`,
+          description: `Sie können maximal 5 Bilder auswählen. Sie haben bereits ${images.length
+            } Bild${images.length !== 1 ? "er" : ""} ausgewählt.`,
         });
         return;
       }
@@ -75,6 +76,13 @@ const Sonstiges = () => {
     }
 
     // Validate required fields
+    if (!kundenName.trim()) {
+      toast.error("Kundenname erforderlich", {
+        description: "Bitte geben Sie den Kundenname an.",
+      });
+      return;
+    }
+
     if (!artikel.trim()) {
       toast.error("Artikel erforderlich", {
         description: "Bitte geben Sie den Artikel an.",
@@ -92,15 +100,16 @@ const Sonstiges = () => {
     const emailBody = `
 Sonstiges - Bestellung
 
+Kundenname: ${kundenName}
+
 Artikel: ${artikel}
 
 Stück: ${stueck}
 
-${
-  images.length > 0
-    ? `Anzahl der beigefügten Bilder: ${images.length}`
-    : "Keine Bilder beigefügt"
-}
+${images.length > 0
+        ? `Anzahl der beigefügten Bilder: ${images.length}`
+        : "Keine Bilder beigefügt"
+      }
 
 ---
 Gesendet über Meterstein
@@ -148,6 +157,17 @@ Gesendet über Meterstein
         <View className="gap-8 p-4 bg-background/30">
           <View className="mt-8 items-center">
             <Text className="text-3xl font-bold text-red-500">Sonstiges</Text>
+          </View>
+
+          {/* Kundenname Section */}
+          <View className="gap-2">
+            <Text className="text-lg font-semibold">Kundenname *</Text>
+            <Input
+              value={kundenName}
+              onChangeText={setKundenName}
+              placeholder="Kundenname eingeben..."
+            />
+            <Text className="text-muted-foreground">Name des Kunden</Text>
           </View>
 
           {/* Artikel Section */}
