@@ -127,11 +127,15 @@ Gesendet am: ${new Date().toLocaleDateString("de-DE")}`;
             onChange={(e) => setStartDate(e.target.value)}
             style={{
               width: '100%',
+              maxWidth: '100%',
               padding: '12px',
               fontSize: '16px',
               borderRadius: '8px',
               border: '1px solid #ccc',
               backgroundColor: 'white',
+              boxSizing: 'border-box',
+              WebkitAppearance: 'none',
+              MozAppearance: 'textfield',
             }}
           />
         </View>
@@ -146,11 +150,15 @@ Gesendet am: ${new Date().toLocaleDateString("de-DE")}`;
             onChange={(e) => setEndDate(e.target.value)}
             style={{
               width: '100%',
+              maxWidth: '100%',
               padding: '12px',
               fontSize: '16px',
               borderRadius: '8px',
               border: '1px solid #ccc',
               backgroundColor: 'white',
+              boxSizing: 'border-box',
+              WebkitAppearance: 'none',
+              MozAppearance: 'textfield',
             }}
           />
         </View>

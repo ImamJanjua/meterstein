@@ -2,12 +2,10 @@ import React, { useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { Text } from "~/components/ui/text";
 
-const EMAIL = "info@meterstein.de";
-
 const Kalendar = () => {
   useEffect(() => {
-    // Redirect immediately to Google Calendar
-    window.open(`https://calendar.google.com/calendar/u/0/r?cid=${EMAIL}`, "_blank");
+    // Redirect immediately to Google Calendar login
+    window.open("https://calendar.google.com/calendar/u/0/r", "_blank");
   }, []);
 
   return (
