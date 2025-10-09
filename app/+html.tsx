@@ -13,6 +13,9 @@ export default function Root({ children }: PropsWithChildren) {
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
+                {/* PWA Manifest */}
+                <link rel="manifest" href="/manifest.json" />
+
                 {/* PWA Meta Tags */}
                 <meta name="application-name" content="Meterstein" />
                 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -26,19 +29,17 @@ export default function Root({ children }: PropsWithChildren) {
                 <meta name="msapplication-tap-highlight" content="no" />
                 <meta name="theme-color" content="#000000" />
 
-                {/* Apple Touch Icons */}
-                <link rel="apple-touch-icon" href="/logo192.png" />
-                <link rel="apple-touch-icon" sizes="152x152" href="/logo192.png" />
-                <link rel="apple-touch-icon" sizes="180x180" href="/logo192.png" />
-                <link rel="apple-touch-icon" sizes="167x167" href="/logo192.png" />
+                {/* Apple Touch Icons - different sizes */}
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
+                <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
+                <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
 
-                {/* Standard Icons */}
-                <link rel="icon" type="image/png" sizes="32x32" href="/logo192.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/logo192.png" />
+
+                {/* Standard Icons - different sizes */}
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
                 <link rel="shortcut icon" href="/favicon.ico" />
 
-                {/* PWA Manifest */}
-                <link rel="manifest" href="/manifest.json" />
 
                 {/*
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native.
@@ -46,7 +47,6 @@ export default function Root({ children }: PropsWithChildren) {
         */}
                 <ScrollViewStyleReset />
 
-                {/* Add any additional <head> elements that you want globally available on web... */}
             </head>
             <body>{children}</body>
         </html>
