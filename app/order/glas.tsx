@@ -79,9 +79,8 @@ const Glas = () => {
       // Check if adding new images would exceed the limit of 5
       if (images.length + newImages.length > 5) {
         toast.error("Zu viele Bilder", {
-          description: `Sie können maximal 5 Bilder auswählen. Sie haben bereits ${
-            images.length
-          } Bild${images.length !== 1 ? "er" : ""} ausgewählt.`,
+          description: `Sie können maximal 5 Bilder auswählen. Sie haben bereits ${images.length
+            } Bild${images.length !== 1 ? "er" : ""} ausgewählt.`,
         });
         return;
       }
@@ -129,13 +128,6 @@ const Glas = () => {
     if (!measurementC.trim()) {
       toast.error("Tiefe erforderlich", {
         description: "Bitte geben Sie die Tiefe ein.",
-      });
-      return;
-    }
-
-    if (images.length === 0) {
-      toast.error("Bilder erforderlich", {
-        description: "Bitte fügen Sie mindestens ein Bild hinzu.",
       });
       return;
     }
@@ -336,7 +328,7 @@ Gesendet über Meterstein
 
           {/* Bilder Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Bilder *</Text>
+            <Text className="text-lg font-semibold">Bilder</Text>
             <Button variant="outline" onPress={pickImages}>
               <Text>Bilder auswählen ({images.length}/5)</Text>
             </Button>

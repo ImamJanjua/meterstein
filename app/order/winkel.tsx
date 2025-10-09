@@ -73,9 +73,8 @@ const Winkel = () => {
       // Check if adding new images would exceed the limit of 5
       if (images.length + newImages.length > 5) {
         toast.error("Zu viele Bilder", {
-          description: `Sie können maximal 5 Bilder auswählen. Sie haben bereits ${
-            images.length
-          } Bild${images.length !== 1 ? "er" : ""} ausgewählt.`,
+          description: `Sie können maximal 5 Bilder auswählen. Sie haben bereits ${images.length
+            } Bild${images.length !== 1 ? "er" : ""} ausgewählt.`,
         });
         return;
       }
@@ -116,13 +115,6 @@ const Winkel = () => {
     if (!farbe.trim()) {
       toast.error("Farbe erforderlich", {
         description: "Bitte wählen Sie mindestens eine Farbe aus.",
-      });
-      return;
-    }
-
-    if (images.length === 0) {
-      toast.error("Bilder erforderlich", {
-        description: "Bitte fügen Sie mindestens ein Bild hinzu.",
       });
       return;
     }
@@ -272,7 +264,7 @@ Gesendet über Meterstein
 
           {/* Bilder Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Bilder *</Text>
+            <Text className="text-lg font-semibold">Bilder</Text>
             <Button variant="outline" onPress={pickImages}>
               <Text>Bilder auswählen ({images.length}/5)</Text>
             </Button>
@@ -407,11 +399,10 @@ function CheckboxWithLabel({
       className="flex-row gap-2 items-center py-2"
     >
       <View
-        className={`w-5 h-5 border-2 rounded ${
-          checked
+        className={`w-5 h-5 border-2 rounded ${checked
             ? "bg-primary border-primary"
             : "bg-background border-muted-foreground"
-        } items-center justify-center`}
+          } items-center justify-center`}
       >
         {checked && <Text className="text-primary-foreground text-xs">✓</Text>}
       </View>
