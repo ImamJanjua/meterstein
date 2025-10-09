@@ -1,42 +1,21 @@
-import React from "react";
-import { View, StyleSheet, Platform } from "react-native";
-import { WebView } from "react-native-webview";
+import React, { useEffect } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { Text } from "~/components/ui/text";
 
 const EMAIL = "info@meterstein.de";
 
 const Kalendar = () => {
-  // For web platform, use iframe
-  if (Platform.OS === "web") {
-    return (
-      <View style={styles.container}>
-        <iframe
-          src={`https://calendar.google.com/calendar/embed?src=${EMAIL}&ctz=Europe%2FBerlin`}
-          style={{
-            width: "100%",
-            height: "100%",
-            border: "none",
-            borderRadius: "8px",
-          }}
-          title="Google Calendar"
-        />
-      </View>
-    );
-  }
+  useEffect(() => {
+    // Redirect immediately to Google Calendar
+    window.open(`https://calendar.google.com/calendar/u/0/r?cid=${EMAIL}`, "_blank");
+  }, []);
 
-  // For mobile platforms, use WebView
   return (
     <View style={styles.container}>
-      <WebView
-        source={{
-          uri: "https://calendar.google.com",
-        }}
-        style={styles.webview}
-        startInLoadingState={true}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        allowsInlineMediaPlayback={true}
-        mediaPlaybackRequiresUserAction={false}
-      />
+      <View style={styles.contentContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+        <Text style={styles.text}>Kalender wird geöffnet...</Text>
+      </View>
     </View>
   );
 };
@@ -44,9 +23,17 @@ const Kalendar = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f5f5f5",
   },
-  webview: {
+  contentContainer: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 16,
+    color: "#666",
+    marginTop: 16,
   },
 });
 
