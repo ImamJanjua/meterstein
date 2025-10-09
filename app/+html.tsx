@@ -29,10 +29,17 @@ export default function Root({ children }: PropsWithChildren) {
                 <meta name="msapplication-tap-highlight" content="no" />
                 <meta name="theme-color" content="#000000" />
 
-                {/* Apple Touch Icons - different sizes */}
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
-                <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
-                <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+                {/* Default Apple Touch Icon - iOS fallback */}
+                <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
+
+                {/* Apple Touch Icons - different sizes with cache-busting */}
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png?v=1" />
+                <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png?v=1" />
+                <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png?v=1" />
+
+                {/* Additional iOS-specific meta tags */}
+                {/* <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+                <meta name="apple-touch-startup-image" content="/apple-touch-icon-180x180.png" /> */}
 
 
                 {/* Standard Icons - different sizes */}
