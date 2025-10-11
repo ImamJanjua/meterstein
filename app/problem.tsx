@@ -14,16 +14,17 @@ import { Text } from "~/components/ui/text";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Label } from "~/components/ui/label";
 import * as ImagePicker from "expo-image-picker";
-import * as MailComposer from "expo-mail-composer";
 import { toast } from "sonner-native";
-import { EMAIL_RECIPIENTS } from "~/lib/constants";
+import { supabase } from "~/lib/supabase";
 
 const Reklamation = () => {
   const [clientName, setClientName] = React.useState("");
   const [whatIsBroken, setWhatIsBroken] = React.useState("");
   const [whoIsResponsible, setWhoIsResponsible] = React.useState("");
   const [whatHappened, setWhatHappened] = React.useState("");
-  const [images, setImages] = React.useState<string[]>([]);
+  const [images, setImages] = React.useState<string[]>([]); // Local URIs for display
+  const [imageUrls, setImageUrls] = React.useState<string[]>([]); // Public URLs for email
+  const [isUploading, setIsUploading] = React.useState(false);
 
   const responsibleParties = [
     "Meterstein",
@@ -37,6 +38,44 @@ const Reklamation = () => {
     "Matplast",
     "Liferant unbekannt",
   ];
+
+  async function uploadImageToSupabase(uri: string): Promise<string | null> {
+    try {
+      // Fetch the image as blob
+      const response = await fetch(uri);
+      const blob = await response.blob();
+
+      // Generate unique filename - get extension from blob type instead of URI
+      const blobType = blob.type || 'image/jpeg';
+      const extension = blobType.split('/')[1] || 'jpg';
+      const fileName = `${Date.now()}.${extension}`;
+      const filePath = `${fileName}`;
+
+      // Upload to Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('images') // Make sure this bucket exists in your Supabase project
+        .upload(filePath, blob, {
+          contentType: blobType,
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (error) {
+        console.error('Supabase upload error:', error);
+        return null;
+      }
+
+      // Get public URL
+      const { data: publicData } = supabase.storage
+        .from('images')
+        .getPublicUrl(filePath);
+
+      return publicData.publicUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    }
+  }
 
   async function pickImages() {
     // No permissions request is necessary for launching the image library
@@ -62,12 +101,46 @@ const Reklamation = () => {
         return;
       }
 
+      // Add images to display immediately
       setImages((prevImages) => [...prevImages, ...newImages]);
+
+      // Upload images to Supabase in the background
+      setIsUploading(true);
+      toast.loading("Bilder werden hochgeladen...", {
+        description: "Bitte warten Sie einen Moment.",
+      });
+
+      const uploadedUrls: string[] = [];
+      for (const imageUri of newImages) {
+        const url = await uploadImageToSupabase(imageUri);
+        if (url) {
+          uploadedUrls.push(url);
+        }
+      }
+
+      setImageUrls((prevUrls) => [...prevUrls, ...uploadedUrls]);
+      setIsUploading(false);
+      toast.dismiss();
+
+      if (uploadedUrls.length === newImages.length) {
+        toast.success("Bilder hochgeladen", {
+          description: `${uploadedUrls.length} Bild${uploadedUrls.length !== 1 ? "er" : ""} erfolgreich hochgeladen.`,
+        });
+      } else {
+        toast.error("Fehler beim Hochladen", {
+          description: `Nur ${uploadedUrls.length} von ${newImages.length} Bildern wurden hochgeladen.`,
+        });
+      }
     }
   }
 
   function removeImage(imageUri: string) {
+    const index = images.indexOf(imageUri);
     setImages((prevImages) => prevImages.filter((uri) => uri !== imageUri));
+    // Also remove from uploaded URLs
+    if (index !== -1) {
+      setImageUrls((prevUrls) => prevUrls.filter((_, i) => i !== index));
+    }
   }
 
   function resetForm() {
@@ -76,18 +149,10 @@ const Reklamation = () => {
     setWhoIsResponsible("");
     setWhatHappened("");
     setImages([]);
+    setImageUrls([]);
   }
 
   async function sendReklamation() {
-    // Check if mail is available
-    const isAvailable = await MailComposer.isAvailableAsync();
-    if (!isAvailable) {
-      toast.error("E-Mail nicht verfügbar", {
-        description: "E-Mail-App ist auf diesem Gerät nicht verfügbar.",
-      });
-      return;
-    }
-
     // Validate required fields
     if (!clientName.trim()) {
       toast.error("Kundenname erforderlich", {
@@ -110,47 +175,56 @@ const Reklamation = () => {
       return;
     }
 
-    // Compose email body
-    const emailBody = `
-Reklamation - ${clientName}
-
-Kundenname: ${clientName}
-
-Was ist kaputt:
-${whatIsBroken}
-
-Wer ist verantwortlich: ${whoIsResponsible || "Nicht ausgewählt"}
-
-Was ist passiert:
-${whatHappened || "Keine weiteren Details angegeben"}
-
-Anzahl der beigefügten Bilder: ${images.length}
-
----
-Gesendet über Meterstein
-    `.trim();
+    // Check if images are still uploading
+    if (isUploading) {
+      toast.error("Bilder werden hochgeladen", {
+        description: "Bitte warten Sie, bis alle Bilder hochgeladen sind.",
+      });
+      return;
+    }
 
     try {
-      // Compose email
-      const result = await MailComposer.composeAsync({
-        recipients: EMAIL_RECIPIENTS, // Replace with actual email
-        subject: `Reklamation - ${clientName}`,
-        body: emailBody,
-        attachments: images, // Use image URIs directly
+
+      toast.loading("E-Mail wird gesendet...", {
+        description: "Bitte warten Sie einen Moment.",
       });
 
-      if (result.status === MailComposer.MailComposerStatus.SENT) {
+      // Send email via Resend API
+      const response = await fetch('/api/email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          senderName: 'Imam',
+          type: 'Reklamation',
+          data: {
+            KundenName: clientName.trim(),
+            WasIstKaputt: whatIsBroken.trim(),
+            WerIstVerantwortlich: whoIsResponsible || "Nicht ausgewählt",
+            WasIstPassiert: whatHappened.trim(),
+          },
+          imageUrls: imageUrls,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.dismiss();
         toast.success("E-Mail gesendet", {
           description: "Die Reklamation wurde erfolgreich gesendet.",
         });
         resetForm();
-      } else if (result.status === MailComposer.MailComposerStatus.CANCELLED) {
-        toast("E-Mail abgebrochen", {
-          description: "Das Senden der E-Mail wurde abgebrochen.",
+      } else {
+        toast.dismiss();
+        toast.error("Fehler beim Senden", {
+          description: result.error || "Ein Fehler ist beim Senden der E-Mail aufgetreten.",
         });
       }
     } catch (error) {
       console.error("Error sending email:", error);
+      toast.dismiss();
       toast.error("Fehler beim Senden", {
         description: "Ein Fehler ist beim Senden der E-Mail aufgetreten.",
       });
@@ -254,8 +328,9 @@ Gesendet über Meterstein
           <Button
             className="w-full mb-8 mt-8 bg-red-500"
             onPress={sendReklamation}
+            disabled={isUploading}
           >
-            <Text>Absenden</Text>
+            <Text>{isUploading ? "Bilder werden hochgeladen..." : "Absenden"}</Text>
           </Button>
         </View>
       </ScrollView>

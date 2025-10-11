@@ -22,7 +22,7 @@ import { Toaster } from "sonner-native";
 import { supabase } from "~/lib/supabase";
 import * as SplashScreen from "expo-splash-screen";
 import { ChevronLeft } from "~/lib/icons/index";
-import { getAppRole } from "~/lib/jwt-utils";
+import { getAppRole, getUserName } from "~/lib/jwt-utils";
 import { colorScheme } from "nativewind";
 
 const LIGHT_THEME: Theme = {
@@ -77,7 +77,9 @@ export default function RootLayout() {
         const { data } = supabase.auth.onAuthStateChange((event, session) => {
           if (session?.access_token) {
             const appRole = getAppRole(session.access_token);
+            const userName = getUserName(session.access_token);
             console.log("🔐 App Role:", appRole);
+            console.log("🔐 User Name:", userName);
           }
 
           if (event === "INITIAL_SESSION") {
@@ -86,7 +88,7 @@ export default function RootLayout() {
               // We'll handle this navigation after mount
             }
           } else if (event === "SIGNED_IN") {
-            router.replace("/home");
+            // router.replace("/home");
           } else if (event === "SIGNED_OUT") {
             router.replace("/");
           }

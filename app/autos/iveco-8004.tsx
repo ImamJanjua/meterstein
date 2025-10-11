@@ -14,9 +14,9 @@ import { Text } from "~/components/ui/text";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Label } from "~/components/ui/label";
 import * as ImagePicker from "expo-image-picker";
-import * as MailComposer from "expo-mail-composer";
 import { toast } from "sonner-native";
-import { EMAIL_RECIPIENTS } from "~/lib/constants";
+import { supabase } from "~/lib/supabase";
+import { getUserName } from "~/lib/jwt-utils";
 
 const IvecoCheckup = () => {
   // Form fields state
@@ -50,6 +50,8 @@ const IvecoCheckup = () => {
 
   const [notes, setNotes] = React.useState("");
   const [images, setImages] = React.useState<string[]>([]);
+  const [imageUrls, setImageUrls] = React.useState<string[]>([]);
+  const [isUploading, setIsUploading] = React.useState(false);
 
   const statusOptions = ["noch voll", "leer", "aufgefüllt"];
   const functionalityOptions = [
@@ -77,6 +79,40 @@ const IvecoCheckup = () => {
     setBodyCondition("");
     setNotes("");
     setImages([]);
+    setImageUrls([]);
+  }
+
+  async function uploadImageToSupabase(uri: string): Promise<string | null> {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const blobType = blob.type || 'image/jpeg';
+      const extension = blobType.split('/')[1] || 'jpg';
+      const fileName = `${Date.now()}.${extension}`;
+      const filePath = `${fileName}`;
+
+      const { data, error } = await supabase.storage
+        .from('images')
+        .upload(filePath, blob, {
+          contentType: blobType,
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (error) {
+        console.error('Supabase upload error:', error);
+        return null;
+      }
+
+      const { data: publicData } = supabase.storage
+        .from('images')
+        .getPublicUrl(filePath);
+
+      return publicData.publicUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    }
   }
 
   async function pickImages() {
@@ -93,89 +129,108 @@ const IvecoCheckup = () => {
 
       if (images.length + newImages.length > 5) {
         toast.error("Zu viele Bilder", {
-          description: `Sie können maximal 5 Bilder auswählen. Sie haben bereits ${
-            images.length
-          } Bild${images.length !== 1 ? "er" : ""} ausgewählt.`,
+          description: `Sie können maximal 5 Bilder auswählen. Sie haben bereits ${images.length} Bild${images.length !== 1 ? "er" : ""} ausgewählt.`,
         });
         return;
       }
 
       setImages((prevImages) => [...prevImages, ...newImages]);
+
+      setIsUploading(true);
+      toast.loading("Bilder werden hochgeladen...", {
+        description: "Bitte warten Sie einen Moment.",
+      });
+
+      const uploadedUrls: string[] = [];
+      for (const imageUri of newImages) {
+        const url = await uploadImageToSupabase(imageUri);
+        if (url) {
+          uploadedUrls.push(url);
+        }
+      }
+
+      setImageUrls((prevUrls) => [...prevUrls, ...uploadedUrls]);
+      setIsUploading(false);
+      toast.dismiss();
+
+      if (uploadedUrls.length === newImages.length) {
+        toast.success("Bilder hochgeladen", {
+          description: `${uploadedUrls.length} Bild${uploadedUrls.length !== 1 ? "er" : ""} erfolgreich hochgeladen.`,
+        });
+      } else {
+        toast.error("Fehler beim Hochladen", {
+          description: `Nur ${uploadedUrls.length} von ${newImages.length} Bildern wurden hochgeladen.`,
+        });
+      }
     }
   }
 
   function removeImage(imageUri: string) {
+    const index = images.indexOf(imageUri);
     setImages((prevImages) => prevImages.filter((uri) => uri !== imageUri));
+    if (index !== -1) {
+      setImageUrls((prevUrls) => prevUrls.filter((_, i) => i !== index));
+    }
   }
 
   async function sendReport() {
-    const isAvailable = await MailComposer.isAvailableAsync();
-    if (!isAvailable) {
-      toast.error("E-Mail nicht verfügbar", {
-        description: "E-Mail-App ist auf diesem Gerät nicht verfügbar.",
+    const { data: { session } } = await supabase.auth.getSession();
+    const userName = getUserName(session?.access_token || "");
+
+
+    if (isUploading) {
+      toast.error("Bilder werden hochgeladen", {
+        description: "Bitte warten Sie, bis alle Bilder hochgeladen sind.",
       });
       return;
     }
 
     try {
-      const emailBody = `
-Iveco 1 A:V 8004 Check-Up Bericht
-
-=== PRÜFBERICHT ===
-
-Öl: ${oil || "Nicht geprüft"}
-
-Scheibenwischer-Flüssigkeit (im Winter mit Frostschutz): ${
-        windshieldFluid || "Nicht geprüft"
-      }
-
-Kühlmittel: ${coolant || "Nicht geprüft"}
-
-Lichter hinten: ${rearLights || "Nicht geprüft"}
-
-Lichter vorne: ${frontLights || "Nicht geprüft"}
-
-Blinker: ${turnSignals || "Nicht geprüft"}
-
-Reifen: ${tires || "Nicht geprüft"}
-
-Verbandskasten: ${firstAidKit || "Nicht geprüft"}
-
-Karosserie: ${bodyCondition || "Nicht geprüft"}
-
-${notes ? `\nAnmerkungen:\n${notes}` : ""}
-
-${
-  images.length > 0
-    ? `\nAnhänge: ${images.length} Bild${images.length !== 1 ? "er" : ""}`
-    : ""
-}
-
----
-Gesendet über Meterstein
-      `.trim();
-
-      const result = await MailComposer.composeAsync({
-        recipients: EMAIL_RECIPIENTS,
-        subject: `Iveco 1 A:V 8004 Check-Up - ${new Date().toLocaleDateString(
-          "de-DE"
-        )}`,
-        body: emailBody,
-        attachments: images,
+      toast.loading("E-Mail wird gesendet...", {
+        description: "Bitte warten Sie einen Moment.",
       });
 
-      if (result.status === MailComposer.MailComposerStatus.SENT) {
+      const response = await fetch('/api/email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          senderName: `${userName}`,
+          type: `Iveco 1 A:V 8004 Check-Up`,
+          data: {
+            Öl: oil || "Nicht geprüft",
+            'Scheibenwischer-Flüssigkeit (im Winter mit Frostschutz)': windshieldFluid || "Nicht geprüft",
+            Kühlmittel: coolant || "Nicht geprüft",
+            'Lichter hinten': rearLights || "Nicht geprüft",
+            'Lichter vorne': frontLights || "Nicht geprüft",
+            Blinker: turnSignals || "Nicht geprüft",
+            Reifen: tires || "Nicht geprüft",
+            Verbandskasten: firstAidKit || "Nicht geprüft",
+            Karosserie: bodyCondition || "Nicht geprüft",
+            Anmerkungen: notes || "Keine",
+          },
+          imageUrls: imageUrls,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.dismiss();
         toast.success("Check-Up gesendet", {
           description: "Der Check-Up Bericht wurde erfolgreich gesendet.",
         });
         resetForm();
-      } else if (result.status === MailComposer.MailComposerStatus.CANCELLED) {
-        toast("E-Mail abgebrochen", {
-          description: "Das Senden des Berichts wurde abgebrochen.",
+      } else {
+        toast.dismiss();
+        toast.error("Fehler beim Senden", {
+          description: result.error || "Ein Fehler ist beim Senden des Berichts aufgetreten.",
         });
       }
     } catch (error) {
       console.error("Error sending email:", error);
+      toast.dismiss();
       toast.error("Fehler beim Senden", {
         description: "Ein Fehler ist beim Senden des Berichts aufgetreten.",
       });
@@ -416,8 +471,8 @@ Gesendet über Meterstein
           </View>
 
           {/* Send Button */}
-          <Button onPress={sendReport} className="bg-red-500 mb-8 mt-8">
-            <Text className="text-foreground">Check-Up senden</Text>
+          <Button onPress={sendReport} className="bg-red-500 mb-8 mt-8" disabled={isUploading}>
+            <Text className="text-foreground">{isUploading ? "Bilder werden hochgeladen..." : "Check-Up senden"}</Text>
           </Button>
         </View>
       </ScrollView>

@@ -6,6 +6,7 @@ export interface SupabaseJWT {
   amr: Array<{ method: string; timestamp: number }>;
   app_metadata: {
     app_role: string;
+    name: string;
     provider: string;
     providers: string[];
   };
@@ -47,6 +48,16 @@ export function decodeSupabaseToken(token: string): SupabaseJWT | null {
 export function getAppRole(token: string): string | null {
   const decodedToken = decodeSupabaseToken(token);
   return decodedToken?.app_metadata?.app_role || null;
+}
+
+/**
+ * Get the user name from a Supabase JWT token
+ * @param token - The JWT access token string
+ * @returns The user name or null if not found
+ */
+export function getUserName(token: string): string {
+  const decodedToken = decodeSupabaseToken(token);
+  return decodedToken?.app_metadata?.name || '';
 }
 
 /**

@@ -20,6 +20,7 @@ import {
 import { Card } from "~/components/ui/card";
 import { supabase } from "~/lib/supabase";
 import { getAppRole, getUserEmail, getUserId } from "~/lib/jwt-utils";
+import Test from "./test";
 
 const HomeScreen = () => {
   const [appRole, setAppRole] = React.useState<string | null>(null);
