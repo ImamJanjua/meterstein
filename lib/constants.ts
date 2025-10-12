@@ -19,5 +19,5 @@ export const NAV_THEME = {
 
 export const BACKEND_URL_PROD = "https://meterstein-backend.vercel.app";
 export const BACKEND_URL_DEV = "http://localhost:3000";
-// export const BACKEND_URL = process.env.NODE_ENV === "production" ? BACKEND_URL_PROD : BACKEND_URL_DEV;
-export const BACKEND_URL = BACKEND_URL_DEV;
+export const BACKEND_URL = process.env.NODE_ENV === "production" ? BACKEND_URL_PROD : BACKEND_URL_DEV;
+// export const BACKEND_URL = BACKEND_URL_DEV;
