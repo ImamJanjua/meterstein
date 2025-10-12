@@ -16,6 +16,8 @@ import { Label } from "~/components/ui/label";
 import * as ImagePicker from "expo-image-picker";
 import { toast } from "sonner-native";
 import { supabase } from "~/lib/supabase";
+import { getUserName } from "~/lib/jwt-utils";
+import { BACKEND_URL } from "~/lib/constants";
 
 const Reklamation = () => {
   const [clientName, setClientName] = React.useState("");
@@ -153,6 +155,9 @@ const Reklamation = () => {
   }
 
   async function sendReklamation() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const userName = getUserName(session?.access_token || "");
+
     // Validate required fields
     if (!clientName.trim()) {
       toast.error("Kundenname erforderlich", {
@@ -190,13 +195,13 @@ const Reklamation = () => {
       });
 
       // Send email via Resend API
-      const response = await fetch('/api/email', {
+      const response = await fetch(`${BACKEND_URL}/api/email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          senderName: 'Imam',
+          senderName: `${userName}`,
           type: 'Reklamation',
           data: {
             KundenName: clientName.trim(),
@@ -222,7 +227,7 @@ const Reklamation = () => {
           description: result.error || "Ein Fehler ist beim Senden der E-Mail aufgetreten.",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error sending email:", error);
       toast.dismiss();
       toast.error("Fehler beim Senden", {

@@ -20,6 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 import { toast } from "sonner-native";
 import { supabase } from "~/lib/supabase";
 import { getUserName } from "~/lib/jwt-utils";
+import { BACKEND_URL } from "~/lib/constants";
 
 const Pfosten = () => {
   // Image zoom state
@@ -38,6 +39,7 @@ const Pfosten = () => {
   const [images, setImages] = React.useState<string[]>([]);
   const [imageUrls, setImageUrls] = React.useState<string[]>([]);
   const [isUploading, setIsUploading] = React.useState(false);
+  const [isSending, setIsSending] = React.useState(false);
 
   const farbeOptions = [
     "RAL 7016 Anthrazit",
@@ -188,11 +190,12 @@ const Pfosten = () => {
     }
 
     try {
+      setIsSending(true);
       toast.loading("E-Mail wird gesendet...", {
         description: "Bitte warten Sie einen Moment.",
       });
 
-      const response = await fetch('/api/email', {
+      const response = await fetch(`${BACKEND_URL}/api/email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -225,12 +228,14 @@ const Pfosten = () => {
           description: result.error || "Ein Fehler ist beim Senden der E-Mail aufgetreten.",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error sending email:", error);
       toast.dismiss();
       toast.error("Fehler beim Senden", {
         description: "Ein Fehler ist beim Senden der E-Mail aufgetreten.",
       });
+    } finally {
+      setIsSending(false);
     }
   }
 
@@ -376,8 +381,10 @@ const Pfosten = () => {
           </View>
 
           {/* Send Button */}
-          <Button onPress={sendOrder} className="bg-red-500 mb-8 mt-8" disabled={isUploading}>
-            <Text className="text-foreground">{isUploading ? "Bilder werden hochgeladen..." : "Senden"}</Text>
+          <Button onPress={sendOrder} className="bg-red-500 mb-8 mt-8" disabled={isUploading || isSending}>
+            <Text className="text-foreground">
+              {isUploading ? "Bilder werden hochgeladen..." : isSending ? "Wird gesendet..." : "Senden"}
+            </Text>
           </Button>
         </View>
       </ScrollView>

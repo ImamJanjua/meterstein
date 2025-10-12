@@ -16,6 +16,7 @@ import * as ImagePicker from "expo-image-picker";
 import { toast } from "sonner-native";
 import { supabase } from "~/lib/supabase";
 import { getUserName } from "~/lib/jwt-utils";
+import { BACKEND_URL } from "~/lib/constants";
 
 const StaplerCheckup = () => {
   // Form fields state
@@ -152,7 +153,7 @@ const StaplerCheckup = () => {
         description: "Bitte warten Sie einen Moment.",
       });
 
-      const response = await fetch('/api/email', {
+      const response = await fetch(`${BACKEND_URL}/api/email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -13,9 +13,10 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Label } from "~/components/ui/label";
-import * as MailComposer from "expo-mail-composer";
 import { toast } from "sonner-native";
-import { EMAIL_RECIPIENTS } from "~/lib/constants";
+import { supabase } from "~/lib/supabase";
+import { getUserName } from "~/lib/jwt-utils";
+import { BACKEND_URL } from "~/lib/constants";
 
 const Metallbohrer = () => {
   // Image zoom state
@@ -35,6 +36,7 @@ const Metallbohrer = () => {
 
   // 12mm
   const [durchmesser12mm, setDurchmesser12mm] = React.useState("");
+  const [isSending, setIsSending] = React.useState(false);
 
   const laengeOptions = ["kurz", "mittel", "lang"];
 
@@ -47,51 +49,57 @@ const Metallbohrer = () => {
   }
 
   async function sendOrder() {
-    // Check if mail is available
-    const isAvailable = await MailComposer.isAvailableAsync();
-    if (!isAvailable) {
-      toast.error("E-Mail nicht verfügbar", {
-        description: "E-Mail-App ist auf diesem Gerät nicht verfügbar.",
-      });
-      return;
-    }
-
-    const emailBody = `
-Bestellung - Metallbohrer
-
-4,2mm: ${durchmesser42mm || "Nicht ausgewählt"}
-6mm: ${durchmesser6mm || "Nicht ausgewählt"}
-8mm: ${durchmesser8mm || "Nicht ausgewählt"}
-10mm: ${durchmesser10mm || "Nicht ausgewählt"}
-12mm: ${durchmesser12mm || "Nicht ausgewählt"}
-
----
-Gesendet über Meterstein
-    `.trim();
+    const { data: { session } } = await supabase.auth.getSession();
+    const userName = getUserName(session?.access_token || "");
 
     try {
-      // Compose email
-      const result = await MailComposer.composeAsync({
-        recipients: EMAIL_RECIPIENTS,
-        subject: `Bestellung - Metallbohrer`,
-        body: emailBody,
+      setIsSending(true);
+      toast.loading("E-Mail wird gesendet...", {
+        description: "Bitte warten Sie einen Moment.",
       });
 
-      if (result.status === MailComposer.MailComposerStatus.SENT) {
+      // Send email via Resend API
+      const response = await fetch(`${BACKEND_URL}/api/email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          senderName: `${userName}`,
+          type: 'Bestellung - Metallbohrer',
+          data: {
+            "4,2mm": durchmesser42mm || "Nicht ausgewählt",
+            "6mm": durchmesser6mm || "Nicht ausgewählt",
+            "8mm": durchmesser8mm || "Nicht ausgewählt",
+            "10mm": durchmesser10mm || "Nicht ausgewählt",
+            "12mm": durchmesser12mm || "Nicht ausgewählt",
+          },
+          imageUrls: [],
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.dismiss();
         toast.success("E-Mail gesendet", {
           description: "Die Bestellung wurde erfolgreich gesendet.",
         });
         resetForm();
-      } else if (result.status === MailComposer.MailComposerStatus.CANCELLED) {
-        toast("E-Mail abgebrochen", {
-          description: "Das Senden der E-Mail wurde abgebrochen.",
+      } else {
+        toast.dismiss();
+        toast.error("Fehler beim Senden", {
+          description: result.error || "Ein Fehler ist beim Senden der E-Mail aufgetreten.",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error sending email:", error);
+      toast.dismiss();
       toast.error("Fehler beim Senden", {
         description: "Ein Fehler ist beim Senden der E-Mail aufgetreten.",
       });
+    } finally {
+      setIsSending(false);
     }
   }
 
@@ -222,8 +230,8 @@ Gesendet über Meterstein
           </View>
 
           {/* Send Button */}
-          <Button onPress={sendOrder} className="bg-red-500 mb-8 mt-8">
-            <Text className="text-foreground">Senden</Text>
+          <Button onPress={sendOrder} className="bg-red-500 mb-8 mt-8" disabled={isSending}>
+            <Text className="text-foreground">{isSending ? "Wird gesendet..." : "Senden"}</Text>
           </Button>
         </View>
       </ScrollView>

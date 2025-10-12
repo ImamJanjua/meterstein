@@ -3,9 +3,10 @@ import { View, ScrollView, Alert } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
-import * as MailComposer from "expo-mail-composer";
 import { toast } from "sonner-native";
-import { EMAIL_RECIPIENTS } from "~/lib/constants";
+import { supabase } from "~/lib/supabase";
+import { getUserName } from "~/lib/jwt-utils";
+import { BACKEND_URL } from "~/lib/constants";
 
 const FreiScreen = () => {
   // Set default dates
@@ -22,6 +23,7 @@ const FreiScreen = () => {
   const [startDate, setStartDate] = useState(formatDateForInput(getMinimumDate()));
   const [endDate, setEndDate] = useState(formatDateForInput(getMinimumDate()));
   const [reason, setReason] = useState("");
+  const [isSending, setIsSending] = useState(false);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString + 'T00:00:00');
@@ -68,43 +70,58 @@ const FreiScreen = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
+    const { data: { session } } = await supabase.auth.getSession();
+    const userName = getUserName(session?.access_token || "");
+
     try {
-      const isAvailable = await MailComposer.isAvailableAsync();
-      if (!isAvailable) {
-        toast.error("Fehler", {
-          description: "E-Mail-App ist nicht verfügbar.",
-        });
-        return;
-      }
+      setIsSending(true);
+      toast.loading("E-Mail wird gesendet...", {
+        description: "Bitte warten Sie einen Moment.",
+      });
 
       const dateRange = startDate === endDate
         ? `${formatDate(startDate)} (ganztägig)`
         : `${formatDate(startDate)} bis ${formatDate(endDate)}`;
 
-      const emailBody = `Abwesenheitsantrag
-
-Zeitraum: ${dateRange}
-
-Grund: ${reason}
-
-Gesendet am: ${new Date().toLocaleDateString("de-DE")}`;
-
-      const result = await MailComposer.composeAsync({
-        recipients: EMAIL_RECIPIENTS,
-        subject: `Abwesenheit - ${dateRange}`,
-        body: emailBody,
+      const response = await fetch(`${BACKEND_URL}/api/email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          senderName: `${userName}`,
+          type: 'Abwesenheitsantrag',
+          data: {
+            Zeitraum: dateRange,
+            Grund: reason,
+            "Gesendet am": new Date().toLocaleDateString("de-DE"),
+          },
+          imageUrls: [],
+        }),
       });
 
-      if (result.status === MailComposer.MailComposerStatus.SENT) {
+      const result = await response.json();
+
+      if (result.success) {
+        toast.dismiss();
         toast.success("Gesendet!", {
           description: "Abwesenheit wurde gemeldet.",
         });
         resetForm();
+      } else {
+        toast.dismiss();
+        toast.error("Fehler beim Senden", {
+          description: result.error || "Ein Fehler ist beim Senden der E-Mail aufgetreten.",
+        });
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Error sending email:", error);
+      toast.dismiss();
       toast.error("Fehler", {
         description: "Beim Senden ist ein Fehler aufgetreten.",
       });
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -175,8 +192,8 @@ Gesendet am: ${new Date().toLocaleDateString("de-DE")}`;
         </View>
 
         {/* Submit */}
-        <Button onPress={handleSubmit} className="bg-red-500 mb-8 mt-4">
-          <Text className="text-foreground">Senden</Text>
+        <Button onPress={handleSubmit} className="bg-red-500 mb-8 mt-4" disabled={isSending}>
+          <Text className="text-foreground">{isSending ? "Wird gesendet..." : "Senden"}</Text>
         </Button>
       </View>
     </ScrollView>

@@ -17,6 +17,7 @@ export const NAV_THEME = {
   },
 };
 
-// export const EMAIL_RECIPIENTS = ["app@meterstein.de"];
-export const EMAIL_RECIPIENTS = ["imamofficaly7@gmail.com"];
-const EMAIL_RECIPIENTS_DEV = ["imamofficaly7@gmail.com"];
+export const BACKEND_URL_PROD = "https://meterstein-backend.vercel.app";
+export const BACKEND_URL_DEV = "http://localhost:3000";
+// export const BACKEND_URL = process.env.NODE_ENV === "production" ? BACKEND_URL_PROD : BACKEND_URL_DEV;
+export const BACKEND_URL = BACKEND_URL_DEV;
