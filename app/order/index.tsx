@@ -199,6 +199,18 @@ const OrderCategoriesScreen = () => {
             },
           ],
         },
+                {
+          id: "somfy",
+          name: "Somfy",
+          image: require("~/assets/images/somfy.jpg"), // Using markisen as placeholder
+          products: [
+            {
+              id: "somfy",
+              name: "Somfy",
+              image: require("~/assets/images/somfy.jpg"), // Using markisen as placeholder
+            },
+          ],
+        },
       ],
     },
     {
