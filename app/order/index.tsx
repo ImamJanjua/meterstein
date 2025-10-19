@@ -207,6 +207,7 @@ const OrderCategoriesScreen = () => {
             {
               id: "somfy",
               name: "Somfy",
+
               image: require("~/assets/images/somfy-main.webp"), // Using markisen as placeholder
             },
           ],
