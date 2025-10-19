@@ -22,21 +22,22 @@ import { supabase } from "~/lib/supabase";
 import { getUserName } from "~/lib/jwt-utils";
 import { BACKEND_URL } from "~/lib/constants";
 
-const Glas = () => {
+const Festwand = () => {
   // Image zoom state
   const [isImageModalVisible, setIsImageModalVisible] = React.useState(false);
 
   // Customer and measurement fields
   const [nameKunde, setNameKunde] = React.useState("");
-  const [stueck, setStueck] = React.useState("");
   const [measurementA, setMeasurementA] = React.useState("");
   const [measurementB, setMeasurementB] = React.useState("");
   const [measurementC, setMeasurementC] = React.useState("");
 
-  // Glass type, thickness and transparency
+  // Color and view position
+  const [farbe, setFarbe] = React.useState("");
+  const [ansichtVonAussen, setAnsichtVonAussen] = React.useState("");
+
+  // Glass type
   const [glasart, setGlasart] = React.useState("");
-  const [starke, setStarke] = React.useState("");
-  const [durchsicht, setDurchsicht] = React.useState("");
 
   // Form fields state
   const [wichtiges, setWichtiges] = React.useState("");
@@ -45,23 +46,25 @@ const Glas = () => {
   const [isUploading, setIsUploading] = React.useState(false);
   const [isSending, setIsSending] = React.useState(false);
 
-  const glasartOptions = [
-    "VSG (Verbund-Sicherheits-Glas)",
-    "ESG (Ein-Scheiben-Glas)",
+  const farbeOptions = [
+    "RAL 7016 Anthrazit",
+    "RAL 9016 Verkehrsweiß",
+    "RAL 9010 Weiß Struktur",
+    "RAL 9007 Silberbronze",
   ];
 
-  const starkeOptions = ["8 mm", "10 mm", "12 mm", "17,75 mm"];
+  const ansichtVonAussenOptions = ["Links", "Rechts"];
 
-  const durchsichtOptions = ["Klarglas", "Milchglas"];
+  const glasartOptions = ["Klarglas", "Michglas"];
 
   function resetForm() {
     setNameKunde("");
     setMeasurementA("");
     setMeasurementB("");
     setMeasurementC("");
+    setFarbe("");
+    setAnsichtVonAussen("");
     setGlasart("");
-    setStarke("");
-    setDurchsicht("");
     setWichtiges("");
     setImages([]);
     setImageUrls([]);
@@ -170,22 +173,22 @@ const Glas = () => {
     }
 
     if (!measurementA.trim()) {
-      toast.error("Stück erforderlich", {
-        description: "Bitte geben Sie die Anzahl der Stücke ein.",
+      toast.error("Maß 'a' erforderlich", {
+        description: "Bitte geben Sie das Maß 'a' ein.",
       });
       return;
     }
 
     if (!measurementB.trim()) {
-      toast.error("Breite erforderlich", {
-        description: "Bitte geben Sie die Breite ein.",
+      toast.error("Maß 'b' erforderlich", {
+        description: "Bitte geben Sie das Maß 'b' ein.",
       });
       return;
     }
 
     if (!measurementC.trim()) {
-      toast.error("Tiefe erforderlich", {
-        description: "Bitte geben Sie die Tiefe ein.",
+      toast.error("Maß 'c' erforderlich", {
+        description: "Bitte geben Sie das Maß 'c' ein.",
       });
       return;
     }
@@ -210,16 +213,15 @@ const Glas = () => {
         },
         body: JSON.stringify({
           senderName: `${userName}`,
-          type: `Bestellung - Glas Rechteck`,
+          type: `Bestellung - Festwand`,
           data: {
             Kundenname: nameKunde.trim(),
-            Stück: stueck.trim(),
-            a: `${measurementA.trim()} mm`,
-            b: `${measurementB.trim()} mm`,
-            c: `${measurementC.trim()} mm`,
-            'Welches Glas': glasart || "Nicht ausgewählt",
-            Stärke: starke || "Nicht ausgewählt",
-            Durchsicht: durchsicht || "Nicht ausgewählt",
+            'Maß a': `${measurementA.trim()} mm`,
+            'Maß b': `${measurementB.trim()} mm`,
+            'Maß c': `${measurementC.trim()} mm`,
+            Farbe: farbe || "Nicht ausgewählt",
+            'Ansicht von außen': ansichtVonAussen || "Nicht ausgewählt",
+            Glasart: glasart || "Nicht ausgewählt",
             Wichtiges: wichtiges || "Nichts angegeben",
           },
           imageUrls: imageUrls,
@@ -263,9 +265,9 @@ const Glas = () => {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ paddingBottom: 100 }}
       >
-        <View className="gap-8 p-4 bg-background/30">
+        <View className="gap-4 p-4 bg-background/30">
           <View className="mt-8 items-center">
-            <Text className="text-3xl font-bold text-red-500">Glas Rechteck</Text>
+            <Text className="text-3xl font-bold text-red-500">Festwand</Text>
           </View>
 
           {/* Product Image */}
@@ -274,7 +276,7 @@ const Glas = () => {
             activeOpacity={0.8}
           >
             <Image
-              source={require("~/assets/images/glas-rechteck.jpeg")}
+              source={require("~/assets/images/festwand-main.webp")}
               contentFit="contain"
               cachePolicy="memory-disk"
               transition={200}
@@ -295,57 +297,81 @@ const Glas = () => {
             />
           </View>
 
-          {/* Stück Section */}
-          <View className="gap-2">
-            <Text className="text-lg font-semibold">Stück *</Text>
-            <Input
-              value={stueck}
-              onChangeText={setStueck}
-              placeholder="Anzahl eingeben..."
-              keyboardType="numeric"
-            />
-            <Text className="text-muted-foreground">Wie viele ?</Text>
-          </View>
-
-          {/* a Section */}
+          {/* Measurement A Section */}
           <View className="gap-2">
             <Text className="text-lg font-semibold">a *</Text>
             <Input
               value={measurementA}
               onChangeText={setMeasurementA}
-              placeholder="a eingeben..."
+              placeholder="Maß eingeben..."
               keyboardType="numeric"
             />
             <Text className="text-muted-foreground">in mm</Text>
           </View>
 
-          {/* b Section */}
+          {/* Measurement B Section */}
           <View className="gap-2">
             <Text className="text-lg font-semibold">b *</Text>
             <Input
               value={measurementB}
               onChangeText={setMeasurementB}
-              placeholder="b eingeben..."
+              placeholder="Maß eingeben..."
               keyboardType="numeric"
             />
             <Text className="text-muted-foreground">in mm</Text>
           </View>
 
-          {/* c Section */}
+          {/* Measurement C Section */}
           <View className="gap-2">
             <Text className="text-lg font-semibold">c *</Text>
             <Input
               value={measurementC}
               onChangeText={setMeasurementC}
-              placeholder="c eingeben..."
+              placeholder="Maß eingeben..."
               keyboardType="numeric"
             />
             <Text className="text-muted-foreground">in mm</Text>
           </View>
 
-          {/* Welches Glas Section */}
+          {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Welches Glas?</Text>
+            <Text className="text-lg font-semibold">Farbe</Text>
+            <RadioGroup
+              value={farbe}
+              onValueChange={setFarbe}
+              className="gap-3"
+            >
+              {farbeOptions.map((option) => (
+                <RadioGroupItemWithLabel
+                  key={option}
+                  value={option}
+                  onLabelPress={() => setFarbe(option)}
+                />
+              ))}
+            </RadioGroup>
+          </View>
+
+          {/* Ansicht von außen Section */}
+          <View className="gap-2">
+            <Text className="text-lg font-semibold">Ansicht (von außen)</Text>
+            <RadioGroup
+              value={ansichtVonAussen}
+              onValueChange={setAnsichtVonAussen}
+              className="gap-3"
+            >
+              {ansichtVonAussenOptions.map((option) => (
+                <RadioGroupItemWithLabel
+                  key={option}
+                  value={option}
+                  onLabelPress={() => setAnsichtVonAussen(option)}
+                />
+              ))}
+            </RadioGroup>
+          </View>
+
+          {/* Glasart Section */}
+          <View className="gap-2">
+            <Text className="text-lg font-semibold">Glasart (von außen)</Text>
             <RadioGroup
               value={glasart}
               onValueChange={setGlasart}
@@ -361,44 +387,8 @@ const Glas = () => {
             </RadioGroup>
           </View>
 
-          {/* Stärke Section */}
-          <View className="gap-2">
-            <Text className="text-lg font-semibold">Stärke?</Text>
-            <RadioGroup
-              value={starke}
-              onValueChange={setStarke}
-              className="gap-3"
-            >
-              {starkeOptions.map((option) => (
-                <RadioGroupItemWithLabel
-                  key={option}
-                  value={option}
-                  onLabelPress={() => setStarke(option)}
-                />
-              ))}
-            </RadioGroup>
-          </View>
-
-          {/* Durchsicht Section */}
-          <View className="gap-2">
-            <Text className="text-lg font-semibold">Durchsicht?</Text>
-            <RadioGroup
-              value={durchsicht}
-              onValueChange={setDurchsicht}
-              className="gap-3"
-            >
-              {durchsichtOptions.map((option) => (
-                <RadioGroupItemWithLabel
-                  key={option}
-                  value={option}
-                  onLabelPress={() => setDurchsicht(option)}
-                />
-              ))}
-            </RadioGroup>
-          </View>
-
           {/* Wichtiges Section */}
-          <View className="gap-2 mt-4">
+          <View className="gap-2">
             <Text className="text-lg font-semibold">Wichtiges</Text>
             <Textarea
               value={wichtiges}
@@ -496,7 +486,7 @@ const Glas = () => {
                 style={{ flex: 1 }}
               >
                 <Image
-                  source={require("~/assets/images/glas-rechteck.jpeg")}
+                  source={require("~/assets/images/festwand-main.webp")}
                   contentFit="contain"
                   cachePolicy="memory-disk"
                   transition={200}
@@ -531,4 +521,4 @@ function RadioGroupItemWithLabel({
   );
 }
 
-export default Glas;
+export default Festwand;

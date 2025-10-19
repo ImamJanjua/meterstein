@@ -131,7 +131,7 @@ const Flexscheiben = () => {
                 <View className="gap-8 p-4 bg-background/30">
                     <View className="mt-8 items-center">
                         <Text className="text-3xl font-bold text-red-500">
-                            Sompfy
+                            Somfy
                         </Text>
                     </View>
 

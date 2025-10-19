@@ -213,11 +213,11 @@ const FertigesDreieck = () => {
         },
         body: JSON.stringify({
           senderName: `${userName}`,
-          type: `Bestellung - Fertiges Dreieck Glas`,
+          type: `Bestellung - Fertiges Dreieck`,
           data: {
             Kundenname: nameKunde.trim(),
-            'Maß a': `${measurementA} mm (Innenkante - Innenkante -60mm)`,
-            'Maß b': `${measurementB} mm (Außenkante - Außenkante)`,
+            'Maß a': `${measurementA} mm`,
+            'Maß b': `${measurementB} mm`,
             'Maß c': `${measurementC} mm`,
             Farbe: farbe || "Nicht ausgewählt",
             'Ansicht von außen': ansichtVonAussen || "Nicht ausgewählt",
@@ -268,7 +268,7 @@ const FertigesDreieck = () => {
         <View className="gap-8 p-4 bg-background/30">
           <View className="mt-8 items-center">
             <Text className="text-3xl font-bold text-red-500">
-              Fertiges Dreieck Glas
+              Fertiges Dreieck
             </Text>
           </View>
 
@@ -278,7 +278,7 @@ const FertigesDreieck = () => {
             activeOpacity={0.8}
           >
             <Image
-              source={require("~/assets/images/glas-dreieck.jpeg")}
+              source={require("~/assets/images/fertiges-dreieck-main.webp")}
               contentFit="contain"
               cachePolicy="memory-disk"
               transition={200}
@@ -488,7 +488,7 @@ const FertigesDreieck = () => {
                 style={{ flex: 1 }}
               >
                 <Image
-                  source={require("~/assets/images/glas-dreieck.jpeg")}
+                  source={require("~/assets/images/fertiges-dreieck-main.webp")}
                   contentFit="contain"
                   cachePolicy="memory-disk"
                   transition={200}

@@ -68,20 +68,8 @@ const OrderCategoriesScreen = () => {
           ],
         },
         {
-          id: "festwand",
-          name: "Festwand Glas",
-          image: require("~/assets/images/festwand.webp"), // Using markisen as placeholder
-          products: [
-            {
-              id: "festwand",
-              name: "Festwand",
-              image: require("~/assets/images/festwand.webp"), // Using markisen as placeholder
-            },
-          ],
-        },
-        {
           id: "fertiges-dreieck",
-          name: "Fertiges Dreieck Glas",
+          name: "Fertiges Dreieck",
           image: require("~/assets/images/fertiges-dreieck.webp"), // Using markisen as placeholder
           products: [
             {
@@ -93,13 +81,23 @@ const OrderCategoriesScreen = () => {
         },
         {
           id: "glas",
-          name: "Rechteck Glas",
+          name: "Glas",
           image: require("~/assets/images/glas.webp"), // Using markisen as placeholder
           products: [
             {
-              id: "glas",
-              name: "Glas",
-              image: require("~/assets/images/glas.webp"), // Using markisen as placeholder
+              id: "glas-rechteck",
+              name: "Rechteck Glas",
+              image: require("~/assets/images/glas.webp"),
+            },
+            {
+              id: "glas-dreieck",
+              name: "Dreieck Glas",
+              image: require("~/assets/images/glas-dreieck.jpeg"),
+            },
+            {
+              id: "festwand-glas",
+              name: "Festwand Glas",
+              image: require("~/assets/images/festwand.webp"),
             },
           ],
         },
@@ -202,13 +200,13 @@ const OrderCategoriesScreen = () => {
         {
           id: "somfy",
           name: "Somfy",
-          image: require("~/assets/images/somfy-main.webp"), // Using markisen as placeholder
+          image: require("~/assets/images/somfy.jpg"), // Using markisen as placeholder
           products: [
             {
               id: "somfy",
               name: "Somfy",
 
-              image: require("~/assets/images/somfy-main.webp"), // Using markisen as placeholder
+              image: require("~/assets/images/somfy.jpg"), // Using markisen as placeholder
             },
           ],
         },
