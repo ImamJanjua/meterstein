@@ -19,6 +19,17 @@ export default function LoginScreen() {
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
+  async function checkIfUserIsAlreadyLoggedIn() {
+    const { data, error } = await supabase.auth.getSession();
+    if (data.session) {
+      router.replace("/home");
+    }
+  }
+
+  React.useEffect(() => {
+    checkIfUserIsAlreadyLoggedIn();
+  }, []);
+
   async function signInWithEmail() {
     setLoading(true);
     toast.loading("Anmelden...");

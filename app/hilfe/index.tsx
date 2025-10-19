@@ -5,6 +5,7 @@ import { Image } from "expo-image";
 import { Text } from "~/components/ui/text";
 import { Card } from "~/components/ui/card";
 import { ChevronRight } from "~/lib/icons/index";
+import { openExternalLinkById } from "~/lib/external-links";
 
 const HilfeScreen = () => {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
@@ -110,11 +111,6 @@ const HilfeScreen = () => {
               id: "windsensor-einlernen",
               name: "Windsensor einlernen",
               image: require("~/assets/images/sensoren-hilfe.webp"),
-            },
-            {
-              id: "somfy-louver",
-              name: "Somfy Louver",
-              image: require("~/assets/images/somfy-louver.webp"),
             },
             {
               id: "white-receiver",
@@ -390,11 +386,9 @@ const HilfeScreen = () => {
                     <View key={subcategory.id}>
                       <TouchableOpacity
                         onPress={() => {
-                          // If subcategory has only one product, navigate directly to it
+                          // If subcategory has only one product, open external link directly
                           if (subcategory.products?.length === 1) {
-                            router.push(
-                              `/hilfe/${subcategory.products[0].id}` as any
-                            );
+                            openExternalLinkById(subcategory.products[0].id);
                           } else {
                             // Otherwise, toggle the accordion
                             setExpandedSubcategory(
@@ -424,7 +418,7 @@ const HilfeScreen = () => {
                             </Text>
                             <Text className="text-sm text-muted-foreground">
                               {subcategory.products?.length === 1
-                                ? "Direkt zur Anleitung"
+                                ? "PDF wird geöffnet"
                                 : `${subcategory.products?.length} Anleitungen verfügbar`}
                             </Text>
                           </View>
@@ -438,8 +432,8 @@ const HilfeScreen = () => {
                             <TouchableOpacity
                               key={product.id}
                               onPress={() => {
-                                // Navigate to specific help topic
-                                router.push(`/hilfe/${product.id}` as any);
+                                // Open external link directly
+                                openExternalLinkById(product.id);
                               }}
                               className="p-3 pl-8 flex-row items-center justify-between border-b border-border/40"
                             >

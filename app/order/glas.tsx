@@ -28,6 +28,7 @@ const Glas = () => {
 
   // Customer and measurement fields
   const [nameKunde, setNameKunde] = React.useState("");
+  const [stueck, setStueck] = React.useState("");
   const [measurementA, setMeasurementA] = React.useState("");
   const [measurementB, setMeasurementB] = React.useState("");
   const [measurementC, setMeasurementC] = React.useState("");
@@ -209,12 +210,13 @@ const Glas = () => {
         },
         body: JSON.stringify({
           senderName: `${userName}`,
-          type: `Bestellung - Glas`,
+          type: `Bestellung - Glas Rechteck`,
           data: {
             Kundenname: nameKunde.trim(),
-            Stück: measurementA.trim(),
-            Breite: `${measurementB.trim()} mm`,
-            Tiefe: `${measurementC.trim()} mm`,
+            Stück: stueck.trim(),
+            a: `${measurementA.trim()} mm`,
+            b: `${measurementB.trim()} mm`,
+            c: `${measurementC.trim()} mm`,
             'Welches Glas': glasart || "Nicht ausgewählt",
             Stärke: starke || "Nicht ausgewählt",
             Durchsicht: durchsicht || "Nicht ausgewählt",
@@ -263,7 +265,7 @@ const Glas = () => {
       >
         <View className="gap-8 p-4 bg-background/30">
           <View className="mt-8 items-center">
-            <Text className="text-3xl font-bold text-red-500">Glas</Text>
+            <Text className="text-3xl font-bold text-red-500">Glas Rechteck</Text>
           </View>
 
           {/* Product Image */}
@@ -272,7 +274,7 @@ const Glas = () => {
             activeOpacity={0.8}
           >
             <Image
-              source={require("~/assets/images/glas-main.webp")}
+              source={require("~/assets/images/glas-rechteck.jpeg")}
               contentFit="contain"
               cachePolicy="memory-disk"
               transition={200}
@@ -297,33 +299,45 @@ const Glas = () => {
           <View className="gap-2">
             <Text className="text-lg font-semibold">Stück *</Text>
             <Input
-              value={measurementA}
-              onChangeText={setMeasurementA}
+              value={stueck}
+              onChangeText={setStueck}
               placeholder="Anzahl eingeben..."
               keyboardType="numeric"
             />
             <Text className="text-muted-foreground">Wie viele ?</Text>
           </View>
 
-          {/* Breite Section */}
+          {/* a Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Breite *</Text>
+            <Text className="text-lg font-semibold">a *</Text>
             <Input
-              value={measurementB}
-              onChangeText={setMeasurementB}
-              placeholder="Breite eingeben..."
+              value={measurementA}
+              onChangeText={setMeasurementA}
+              placeholder="a eingeben..."
               keyboardType="numeric"
             />
             <Text className="text-muted-foreground">in mm</Text>
           </View>
 
-          {/* Tiefe Section */}
+          {/* b Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Tiefe *</Text>
+            <Text className="text-lg font-semibold">b *</Text>
+            <Input
+              value={measurementB}
+              onChangeText={setMeasurementB}
+              placeholder="b eingeben..."
+              keyboardType="numeric"
+            />
+            <Text className="text-muted-foreground">in mm</Text>
+          </View>
+
+          {/* c Section */}
+          <View className="gap-2">
+            <Text className="text-lg font-semibold">c *</Text>
             <Input
               value={measurementC}
               onChangeText={setMeasurementC}
-              placeholder="Tiefe eingeben..."
+              placeholder="c eingeben..."
               keyboardType="numeric"
             />
             <Text className="text-muted-foreground">in mm</Text>
@@ -482,7 +496,7 @@ const Glas = () => {
                 style={{ flex: 1 }}
               >
                 <Image
-                  source={require("~/assets/images/glas-main.webp")}
+                  source={require("~/assets/images/glas-rechteck.jpeg")}
                   contentFit="contain"
                   cachePolicy="memory-disk"
                   transition={200}

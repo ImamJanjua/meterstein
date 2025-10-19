@@ -1,7 +1,7 @@
 import React from "react";
 import { View, ScrollView, TouchableOpacity, Image, Dimensions } from "react-native";
 import { Text } from "~/components/ui/text";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { Platform } from "react-native";
 import {
@@ -16,15 +16,20 @@ import {
   Truck,
   ClipboardList,
   LogOut,
+  Bell,
+  ChevronRight,
+  Settings,
 } from "lucide-react-native";
 import { Card } from "~/components/ui/card";
 import { supabase } from "~/lib/supabase";
 import { getAppRole, getUserEmail, getUserId } from "~/lib/jwt-utils";
+import { openExternalLinkById } from "~/lib/external-links";
 import Test from "./test";
 
 const HomeScreen = () => {
   const [appRole, setAppRole] = React.useState<string | null>(null);
   const [screenWidth, setScreenWidth] = React.useState(Dimensions.get('window').width);
+  const [latestAlert, setLatestAlert] = React.useState<any>(null);
 
   // Logout function
   const handleLogout = async () => {
@@ -37,6 +42,28 @@ const HomeScreen = () => {
     }
   };
 
+  // Fetch latest alert
+  const fetchLatestAlert = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('alerts')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+        console.error('Error fetching latest alert:', error);
+        return;
+      }
+
+      setLatestAlert(data);
+    } catch (error) {
+      console.error('Error fetching latest alert:', error);
+    }
+  };
+
   // Get user info from token
   React.useEffect(() => {
     const getUserInfo = async () => {
@@ -45,21 +72,21 @@ const HomeScreen = () => {
       } = await supabase.auth.getSession();
       if (session?.access_token) {
         const role = getAppRole(session.access_token);
-        const userEmail = getUserEmail(session.access_token);
-        const userId = getUserId(session.access_token);
 
         setAppRole(role);
-
-        console.log("🏠 Home Screen - User Info:", {
-          appRole: role,
-          userEmail,
-          userId,
-        });
       }
     };
 
     getUserInfo();
+    fetchLatestAlert();
   }, []);
+
+  // Refresh alerts when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchLatestAlert();
+    }, [])
+  );
 
   // Listen for screen size changes
   React.useEffect(() => {
@@ -114,7 +141,7 @@ const HomeScreen = () => {
       id: "kalender",
       title: "Kalender",
       icon: Calendar,
-      onPress: () => router.push("/kalendar" as any),
+      onPress: () => openExternalLinkById("kalendar"),
     },
     {
       id: "kontakt",
@@ -140,19 +167,30 @@ const HomeScreen = () => {
       icon: Plane,
       onPress: () => router.push("/frei" as any),
     },
+    {
+      id: "büro",
+      title: "Büro",
+      icon: Settings,
+      onPress: () => router.push("/admin" as any),
+    },
   ];
 
   // Filter navigation items based on app role
   const navigationItems = allNavigationItems.filter((item) => {
     if (appRole === "aushilfe") {
-      // Hide "lieferung" and "kontakt" for aushilfe role
-      return item.id !== "lieferung" && item.id !== "kontakt";
+      // Hide "lieferung", "kontakt", and "büro" for aushilfe role
+      return item.id !== "lieferung" && item.id !== "kontakt" && item.id !== "büro";
     }
     if (appRole === "montage") {
-      // Show all items for montage role (including "lieferung")
+      // Show all items for montage role (including "lieferung") but hide "büro"
+      return item.id !== "büro";
+    }
+    if (appRole === "büro") {
+      // Show all items including "büro" for büro role
       return true;
     }
-    return true; // Show all items for other roles
+    // For other roles, hide admin
+    return item.id !== "büro";
   });
 
   return (
@@ -166,6 +204,33 @@ const HomeScreen = () => {
             resizeMode="contain"
           />
         </View>
+
+        {/* Alerts Section */}
+        {latestAlert && (
+          <View className="mb-6">
+            <TouchableOpacity
+              onPress={() => router.push("/alerts")}
+              className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+              activeOpacity={0.7}
+            >
+              <View className="flex-row items-center justify-between">
+                <View className="flex-row items-center flex-1">
+                  <Bell size={20} className="text-red-600 dark:text-red-400 mr-3" />
+                  <View className="flex-1">
+                    <Text className="text-red-900 dark:text-red-100 font-semibold text-sm mb-1">
+                      {latestAlert.title}
+                    </Text>
+                    <Text className="text-red-700 dark:text-red-300 text-xs" numberOfLines={2}>
+                      {latestAlert.content}
+                    </Text>
+                  </View>
+                </View>
+                <ChevronRight size={16} className="text-red-600 dark:text-red-400" />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {/* Grid Layout */}
         <View className="flex-row flex-wrap justify-between">
           {navigationItems.map((item) => (

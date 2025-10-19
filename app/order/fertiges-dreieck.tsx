@@ -213,7 +213,7 @@ const FertigesDreieck = () => {
         },
         body: JSON.stringify({
           senderName: `${userName}`,
-          type: `Bestellung - Fertiges Dreieck`,
+          type: `Bestellung - Fertiges Dreieck Glas`,
           data: {
             Kundenname: nameKunde.trim(),
             'Maß a': `${measurementA} mm (Innenkante - Innenkante -60mm)`,
@@ -268,7 +268,7 @@ const FertigesDreieck = () => {
         <View className="gap-8 p-4 bg-background/30">
           <View className="mt-8 items-center">
             <Text className="text-3xl font-bold text-red-500">
-              Fertiges Dreieck
+              Fertiges Dreieck Glas
             </Text>
           </View>
 
@@ -278,7 +278,7 @@ const FertigesDreieck = () => {
             activeOpacity={0.8}
           >
             <Image
-              source={require("~/assets/images/fertiges-dreieck-main.webp")}
+              source={require("~/assets/images/glas-dreieck.jpeg")}
               contentFit="contain"
               cachePolicy="memory-disk"
               transition={200}
@@ -488,7 +488,7 @@ const FertigesDreieck = () => {
                 style={{ flex: 1 }}
               >
                 <Image
-                  source={require("~/assets/images/fertiges-dreieck-main.webp")}
+                  source={require("~/assets/images/glas-dreieck.jpeg")}
                   contentFit="contain"
                   cachePolicy="memory-disk"
                   transition={200}

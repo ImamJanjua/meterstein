@@ -69,7 +69,7 @@ const OrderCategoriesScreen = () => {
         },
         {
           id: "festwand",
-          name: "Festwand",
+          name: "Festwand Glas",
           image: require("~/assets/images/festwand.webp"), // Using markisen as placeholder
           products: [
             {
@@ -81,7 +81,7 @@ const OrderCategoriesScreen = () => {
         },
         {
           id: "fertiges-dreieck",
-          name: "Fertiges Dreieck",
+          name: "Fertiges Dreieck Glas",
           image: require("~/assets/images/fertiges-dreieck.webp"), // Using markisen as placeholder
           products: [
             {
@@ -93,7 +93,7 @@ const OrderCategoriesScreen = () => {
         },
         {
           id: "glas",
-          name: "Glas",
+          name: "Rechteck Glas",
           image: require("~/assets/images/glas.webp"), // Using markisen as placeholder
           products: [
             {
@@ -196,6 +196,18 @@ const OrderCategoriesScreen = () => {
               id: "statiktraeger",
               name: "Statikträger",
               image: require("~/assets/images/statiktraeger.webp"), // Using markisen as placeholder
+            },
+          ],
+        },
+        {
+          id: "somfy",
+          name: "Somfy",
+          image: require("~/assets/images/somfy-main.webp"), // Using markisen as placeholder
+          products: [
+            {
+              id: "somfy",
+              name: "Somfy",
+              image: require("~/assets/images/somfy-main.webp"), // Using markisen as placeholder
             },
           ],
         },

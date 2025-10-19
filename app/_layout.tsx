@@ -16,7 +16,6 @@ import { Appearance, Platform, View } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
-import { ThemeToggle } from "~/components/ThemeToggle";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { Toaster } from "sonner-native";
 import { supabase } from "~/lib/supabase";
@@ -46,20 +45,20 @@ const usePlatformSpecificSetup = Platform.select({
 });
 
 // Route Logger Component
-// function RouteLogger() {
-//   const pathname = usePathname();
-//   const segments = useSegments();
+function RouteLogger() {
+  const pathname = usePathname();
+  const segments = useSegments();
 
-//   React.useEffect(() => {
-//     console.log("📍 Current Route:", {
-//       pathname,
-//       segments,
-//       fullPath: `/${segments.join("/")}`,
-//     });
-//   }, [pathname, segments]);
+  React.useEffect(() => {
+    console.log("📍 Current Route:", {
+      pathname,
+      segments,
+      fullPath: `/${segments.join("/")}`,
+    });
+  }, [pathname, segments]);
 
-//   return null;
-// }
+  return null;
+}
 
 export default function RootLayout() {
   usePlatformSpecificSetup();
@@ -76,19 +75,14 @@ export default function RootLayout() {
         // Don't navigate here, just set up the auth listener
         const { data } = supabase.auth.onAuthStateChange((event, session) => {
           if (session?.access_token) {
-            const appRole = getAppRole(session.access_token);
-            const userName = getUserName(session.access_token);
-            console.log("🔐 App Role:", appRole);
-            console.log("🔐 User Name:", userName);
+            // const appRole = getAppRole(session.access_token);
+            // const userName = getUserName(session.access_token);
+            // console.log("🔐 App Role:", appRole);
+            // console.log("🔐 User Name:", userName);
           }
 
           if (event === "INITIAL_SESSION") {
-            // Store the session info but don't navigate yet
-            if (session) {
-              // We'll handle this navigation after mount
-            }
           } else if (event === "SIGNED_IN") {
-            // router.replace("/home");
           } else if (event === "SIGNED_OUT") {
             router.replace("/");
           }
@@ -107,17 +101,6 @@ export default function RootLayout() {
     prepare();
   }, []);
 
-  // Add a new effect to handle initial navigation after mount
-  // React.useEffect(() => {
-  //   if (appIsReady) {
-  //     // Check if user is already signed in and navigate accordingly
-  //     supabase.auth.getSession().then(({ data: { session } }) => {
-  //       if (session) {
-  //         router.replace("/abnahme");
-  //       }
-  //     });
-  //   }
-  // }, [appIsReady]);
 
   React.useEffect(() => {
     if (appIsReady) {
@@ -129,11 +112,11 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
 
       // Check if user is already signed in and navigate accordingly
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) {
-          router.replace("/home");
-        }
-      });
+      // supabase.auth.getSession().then(({ data: { session } }) => {
+      //   if (session) {
+      //     router.replace("/home");
+      //   }
+      // });
     }
   }, [appIsReady]);
 
@@ -145,7 +128,7 @@ export default function RootLayout() {
     <GestureHandlerRootView>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-        {/* <RouteLogger /> */}
+        <RouteLogger />
         <Stack>
           <Stack.Screen
             name="index"
@@ -164,7 +147,6 @@ export default function RootLayout() {
               headerTitleStyle: {
                 color: "#BE1D1C",
               },
-              // headerRight: () => <ThemeToggle />,
             }}
           />
           <Stack.Screen
@@ -185,6 +167,45 @@ export default function RootLayout() {
             name="problem"
             options={{
               title: "",
+              headerTitleAlign: "center",
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  className="flex-row items-center ml-2"
+                >
+                  <ChevronLeft className="w-6 h-6 text-red-500" />
+                  <Text className="text-lg font-semibold text-red-500">
+                    Home
+                  </Text>
+                </TouchableOpacity>
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="alerts"
+            options={{
+              title: "",
+              headerTitleAlign: "center",
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  className="flex-row items-center ml-2"
+                >
+                  <ChevronLeft className="w-6 h-6 text-red-500" />
+                  <Text className="text-lg font-semibold text-red-500">
+                    Home
+                  </Text>
+                </TouchableOpacity>
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="admin"
+            options={{
+              title: "",
+              headerTitleStyle: {
+                color: "#BE1D1C",
+              },
               headerTitleAlign: "center",
               headerLeft: () => (
                 <TouchableOpacity

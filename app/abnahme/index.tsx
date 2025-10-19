@@ -5,6 +5,7 @@ import { Image } from "expo-image";
 import { Text } from "~/components/ui/text";
 import { Card } from "~/components/ui/card";
 import { ChevronRight } from "~/lib/icons/index";
+import { openExternalLinkById } from "~/lib/external-links";
 
 const AbnahmeScreen = () => {
   return (
@@ -21,7 +22,7 @@ const AbnahmeScreen = () => {
         {/* Abnahme Button */}
         <Card className="overflow-hidden">
           <TouchableOpacity
-            onPress={() => router.push("/abnahme/abnahme" as any)}
+            onPress={() => openExternalLinkById("abnahme")}
             className="p-4 flex-row items-center justify-between bg-primary/5"
           >
             <View className="flex-row items-center gap-3">
@@ -47,7 +48,7 @@ const AbnahmeScreen = () => {
         {/* Teilabnahme Button */}
         <Card className="overflow-hidden">
           <TouchableOpacity
-            onPress={() => router.push("/abnahme/teilabnahme" as any)}
+            onPress={() => openExternalLinkById("abnahme")}
             className="p-4 flex-row items-center justify-between bg-primary/5"
           >
             <View className="flex-row items-center gap-3">
