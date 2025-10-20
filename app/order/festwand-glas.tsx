@@ -213,7 +213,7 @@ const Festwand = () => {
         },
         body: JSON.stringify({
           senderName: `${userName}`,
-          type: `Bestellung - Festwand`,
+          type: `Bestellung - Festwand Glas`,
           data: {
             Kundenname: nameKunde.trim(),
             'Maß a': `${measurementA.trim()} mm`,
@@ -276,7 +276,7 @@ const Festwand = () => {
             activeOpacity={0.8}
           >
             <Image
-              source={require("~/assets/images/festwand-main.webp")}
+              source={require("~/assets/images/glas-festwand.jpeg")}
               contentFit="contain"
               cachePolicy="memory-disk"
               transition={200}
@@ -486,7 +486,7 @@ const Festwand = () => {
                 style={{ flex: 1 }}
               >
                 <Image
-                  source={require("~/assets/images/festwand-main.webp")}
+                  source={require("~/assets/images/glas-festwand.jpeg")}
                   contentFit="contain"
                   cachePolicy="memory-disk"
                   transition={200}

@@ -29,7 +29,15 @@ import Test from "./test";
 const HomeScreen = () => {
   const [appRole, setAppRole] = React.useState<string | null>(null);
   const [screenWidth, setScreenWidth] = React.useState(Dimensions.get('window').width);
-  const [latestAlert, setLatestAlert] = React.useState<any>(null);
+  const [latestAlerts, setLatestAlerts] = React.useState<{
+    ALLGEMEIN: any | null;
+    TEAM1: any | null;
+    TEAM2: any | null;
+  }>({
+    ALLGEMEIN: null,
+    TEAM1: null,
+    TEAM2: null
+  });
 
   // Logout function
   const handleLogout = async () => {
@@ -42,25 +50,32 @@ const HomeScreen = () => {
     }
   };
 
-  // Fetch latest alert
-  const fetchLatestAlert = async () => {
+  // Fetch latest alerts for each category
+  const fetchLatestAlerts = async () => {
     try {
-      const { data, error } = await supabase
-        .from('alerts')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+      const categories = ['ALLGEMEIN', 'TEAM1', 'TEAM2'];
+      const newLatestAlerts = { ALLGEMEIN: null, TEAM1: null, TEAM2: null };
 
-      if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned"
-        console.error('Error fetching latest alert:', error);
-        return;
+      for (const category of categories) {
+        const { data, error } = await supabase
+          .from('alerts')
+          .select('*')
+          .eq('category', category)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+
+        if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+          console.error(`Error fetching latest ${category} alert:`, error);
+          continue;
+        }
+
+        (newLatestAlerts as any)[category] = data;
       }
 
-      setLatestAlert(data);
+      setLatestAlerts(newLatestAlerts);
     } catch (error) {
-      console.error('Error fetching latest alert:', error);
+      console.error('Error fetching latest alerts:', error);
     }
   };
 
@@ -78,13 +93,13 @@ const HomeScreen = () => {
     };
 
     getUserInfo();
-    fetchLatestAlert();
+    fetchLatestAlerts();
   }, []);
 
   // Refresh alerts when screen comes into focus
   useFocusEffect(
     React.useCallback(() => {
-      fetchLatestAlert();
+      fetchLatestAlerts();
     }, [])
   );
 
@@ -206,28 +221,79 @@ const HomeScreen = () => {
         </View>
 
         {/* Alerts Section */}
-        {latestAlert && (
+        {(latestAlerts.ALLGEMEIN || latestAlerts.TEAM1 || latestAlerts.TEAM2) && (
           <View className="mb-6">
-            <TouchableOpacity
-              onPress={() => router.push("/alerts")}
-              className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
-              activeOpacity={0.7}
-            >
-              <View className="flex-row items-center justify-between">
-                <View className="flex-row items-center flex-1">
-                  <Bell size={20} className="text-red-600 dark:text-red-400 mr-3" />
-                  <View className="flex-1">
-                    <Text className="text-red-900 dark:text-red-100 font-semibold text-sm mb-1">
-                      {latestAlert.title}
-                    </Text>
-                    <Text className="text-red-700 dark:text-red-300 text-xs" numberOfLines={2}>
-                      {latestAlert.content}
-                    </Text>
+            {/* Allgemeine Nachrichten Banner */}
+            {latestAlerts.ALLGEMEIN && (
+              <TouchableOpacity
+                onPress={() => router.push("/alerts")}
+                className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-3"
+                activeOpacity={0.7}
+              >
+                <View className="flex-row items-center justify-between">
+                  <View className="flex-row items-center flex-1">
+                    <Bell size={20} className="text-red-600 dark:text-red-400 mr-3" />
+                    <View className="flex-1">
+                      <Text className="text-red-900 dark:text-red-100 font-semibold text-sm mb-1">
+                        Allgemein: {latestAlerts.ALLGEMEIN.title}
+                      </Text>
+                      <Text className="text-red-700 dark:text-red-300 text-xs" numberOfLines={2}>
+                        {latestAlerts.ALLGEMEIN.content}
+                      </Text>
+                    </View>
                   </View>
+                  <ChevronRight size={16} className="text-red-600 dark:text-red-400" />
                 </View>
-                <ChevronRight size={16} className="text-red-600 dark:text-red-400" />
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            )}
+
+            {/* Team 1 Banner */}
+            {latestAlerts.TEAM1 && (
+              <TouchableOpacity
+                onPress={() => router.push("/alerts")}
+                className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-3"
+                activeOpacity={0.7}
+              >
+                <View className="flex-row items-center justify-between">
+                  <View className="flex-row items-center flex-1">
+                    <Bell size={20} className="text-red-600 dark:text-red-400 mr-3" />
+                    <View className="flex-1">
+                      <Text className="text-red-900 dark:text-red-100 font-semibold text-sm mb-1">
+                        Team 1: {latestAlerts.TEAM1.title}
+                      </Text>
+                      <Text className="text-red-700 dark:text-red-300 text-xs" numberOfLines={2}>
+                        {latestAlerts.TEAM1.content}
+                      </Text>
+                    </View>
+                  </View>
+                  <ChevronRight size={16} className="text-red-600 dark:text-red-400" />
+                </View>
+              </TouchableOpacity>
+            )}
+
+            {/* Team 2 Banner */}
+            {latestAlerts.TEAM2 && (
+              <TouchableOpacity
+                onPress={() => router.push("/alerts")}
+                className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-3"
+                activeOpacity={0.7}
+              >
+                <View className="flex-row items-center justify-between">
+                  <View className="flex-row items-center flex-1">
+                    <Bell size={20} className="text-red-600 dark:text-red-400 mr-3" />
+                    <View className="flex-1">
+                      <Text className="text-red-900 dark:text-red-100 font-semibold text-sm mb-1">
+                        Team 2: {latestAlerts.TEAM2.title}
+                      </Text>
+                      <Text className="text-red-700 dark:text-red-300 text-xs" numberOfLines={2}>
+                        {latestAlerts.TEAM2.content}
+                      </Text>
+                    </View>
+                  </View>
+                  <ChevronRight size={16} className="text-red-600 dark:text-red-400" />
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
         )}
 

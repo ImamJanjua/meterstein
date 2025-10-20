@@ -33,6 +33,7 @@ const Flexscheiben = () => {
 
     // Stück (Quantity)
     const [stueck, setStueck] = React.useState("");
+    const [nameKunde, setNameKunde] = React.useState("");
     const [isSending, setIsSending] = React.useState(false);
 
     function resetForm() {
@@ -42,13 +43,22 @@ const Flexscheiben = () => {
         setFernbedienung1Kanal(false);
         setFernbedienung5Kanal(false);
         setStueck("");
+        setNameKunde("");
     }
 
     async function sendOrder() {
         const { data: { session } } = await supabase.auth.getSession();
         const userName = getUserName(session?.access_token || "");
 
+
         // Validate required fields
+        if (!nameKunde.trim()) {
+            toast.error("Kundenname erforderlich", {
+                description: "Bitte geben Sie den Namen des Kunden ein.",
+            });
+            return;
+        }
+
         if (!stueck.trim()) {
             toast.error("Stück erforderlich", {
                 description: "Bitte geben Sie die Anzahl der Stücke ein.",
@@ -80,6 +90,7 @@ const Flexscheiben = () => {
                     senderName: `${userName}`,
                     type: 'Bestellung - Sompfy',
                     data: {
+                        NameKunde: nameKunde.trim(),
                         Stück: stueck.trim(),
                         "Art - Io louver": metall ? "Ja" : "Nein",
                         "Art - White reciver 24v": stein ? "Ja" : "Nein",
@@ -141,7 +152,7 @@ const Flexscheiben = () => {
                         activeOpacity={0.8}
                     >
                         <Image
-                            source={require("~/assets/images/somfy-main.webp")}
+                            source={require("~/assets/images/somfy.jpg")}
                             contentFit="contain"
                             cachePolicy="memory-disk"
                             transition={200}
@@ -151,6 +162,17 @@ const Flexscheiben = () => {
                             }}
                         />
                     </TouchableOpacity>
+
+
+                    {/* Name Kunde Section */}
+                    <View className="gap-2">
+                        <Text className="text-lg font-semibold">Name Kunde *</Text>
+                        <Input
+                            value={nameKunde}
+                            onChangeText={setNameKunde}
+                            placeholder="Name des Kunden eingeben..."
+                        />
+                    </View>
 
                     {/* Stück Section */}
                     <View className="gap-2">
@@ -245,7 +267,7 @@ const Flexscheiben = () => {
                                 style={{ flex: 1 }}
                             >
                                 <Image
-                                    source={require("~/assets/images/somfy-main.webp")}
+                                    source={require("~/assets/images/somfy.jpg")}
                                     contentFit="contain"
                                     cachePolicy="memory-disk"
                                     transition={200}

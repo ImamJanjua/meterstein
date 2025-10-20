@@ -68,6 +68,18 @@ const OrderCategoriesScreen = () => {
           ],
         },
         {
+          id: "festwand",
+          name: "Festwand",
+          image: require("~/assets/images/festwand.webp"), // Using markisen as placeholder
+          products: [
+            {
+              id: "festwand",
+              name: "Festwand",
+              image: require("~/assets/images/festwand.webp"), // Using markisen as placeholder
+            },
+          ],
+        },
+        {
           id: "fertiges-dreieck",
           name: "Fertiges Dreieck",
           image: require("~/assets/images/fertiges-dreieck.webp"), // Using markisen as placeholder
@@ -87,7 +99,7 @@ const OrderCategoriesScreen = () => {
             {
               id: "glas-rechteck",
               name: "Rechteck Glas",
-              image: require("~/assets/images/glas.webp"),
+              image: require("~/assets/images/rechteck-glas.jpeg"),
             },
             {
               id: "glas-dreieck",
@@ -97,7 +109,7 @@ const OrderCategoriesScreen = () => {
             {
               id: "festwand-glas",
               name: "Festwand Glas",
-              image: require("~/assets/images/festwand.webp"),
+              image: require("~/assets/images/glas-festwand.jpeg"),
             },
           ],
         },

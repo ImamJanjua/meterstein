@@ -335,7 +335,7 @@ const Reklamation = () => {
             onPress={sendReklamation}
             disabled={isUploading}
           >
-            <Text>{isUploading ? "Bilder werden hochgeladen..." : "Absenden"}</Text>
+            <Text className="text-white">{isUploading ? "Bilder werden hochgeladen..." : "Absenden"}</Text>
           </Button>
         </View>
       </ScrollView>

@@ -201,7 +201,7 @@ const Glas = () => {
         },
         body: JSON.stringify({
           senderName: `${userName}`,
-          type: `Bestellung - Glas Rechteck`,
+          type: `Bestellung - Rechteck Glas`,
           data: {
             Kundenname: nameKunde.trim(),
             Stück: stueck.trim(),
@@ -264,7 +264,7 @@ const Glas = () => {
             activeOpacity={0.8}
           >
             <Image
-              source={require("~/assets/images/glas-main.webp")}
+              source={require("~/assets/images/rechteck-glas.jpeg")}
               contentFit="contain"
               cachePolicy="memory-disk"
               transition={200}
@@ -474,7 +474,7 @@ const Glas = () => {
                 style={{ flex: 1 }}
               >
                 <Image
-                  source={require("~/assets/images/glas-main.webp")}
+                  source={require("~/assets/images/rechteck-glas.jpeg")}
                   contentFit="contain"
                   cachePolicy="memory-disk"
                   transition={200}

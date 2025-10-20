@@ -7,6 +7,7 @@ import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { supabase } from "~/lib/supabase";
 import { getAppRole } from "~/lib/jwt-utils";
 import { toast } from "sonner-native";
@@ -14,6 +15,7 @@ import { toast } from "sonner-native";
 const CreateAlertScreen = () => {
     const [title, setTitle] = React.useState("");
     const [content, setContent] = React.useState("");
+    const [category, setCategory] = React.useState<string>("");
     const [loading, setLoading] = React.useState(false);
     const [appRole, setAppRole] = React.useState<string | null>(null);
 
@@ -38,7 +40,7 @@ const CreateAlertScreen = () => {
     }, []);
 
     const handleSave = async () => {
-        if (!title.trim() || !content.trim()) {
+        if (!title.trim() || !content.trim() || !category) {
             toast.error('Bitte füllen Sie alle Felder aus');
             return;
         }
@@ -62,7 +64,7 @@ const CreateAlertScreen = () => {
                 .insert({
                     title: title.trim(),
                     content: content.trim(),
-                    is_active: true,
+                    category: category,
                 });
 
             if (error) {
@@ -124,9 +126,28 @@ const CreateAlertScreen = () => {
                             />
                         </View>
 
+                        <View className="mb-6">
+                            <Text className="text-sm font-medium text-foreground mb-2">
+                                Kategorie *
+                            </Text>
+                            <Select
+                                value={category ? { value: category, label: category === 'ALLGEMEIN' ? 'Allgemeine Nachrichten' : category === 'TEAM1' ? 'Team 1 Nachrichten' : 'Team 2 Nachrichten' } : undefined}
+                                onValueChange={(option) => option && setCategory(option.value)}
+                            >
+                                <SelectTrigger className="w-full text-foreground">
+                                    <SelectValue placeholder="Kategorie auswählen" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="ALLGEMEIN" label="Allgemeine Nachrichten">Allgemeine Nachrichten</SelectItem>
+                                    <SelectItem value="TEAM1" label="Team 1 Nachrichten">Team 1 Nachrichten</SelectItem>
+                                    <SelectItem value="TEAM2" label="Team 2 Nachrichten">Team 2 Nachrichten</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </View>
+
                         <Button
                             onPress={handleSave}
-                            disabled={loading || !title.trim() || !content.trim()}
+                            disabled={loading || !title.trim() || !content.trim() || !category}
                             className="w-full bg-red-500"
                         >
                             <Save size={16} className="text-white mr-2" />
