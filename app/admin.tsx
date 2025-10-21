@@ -130,19 +130,16 @@ const CreateAlertScreen = () => {
                             <Text className="text-sm font-medium text-foreground mb-2">
                                 Kategorie *
                             </Text>
-                            <Select
-                                value={category ? { value: category, label: category === 'ALLGEMEIN' ? 'Allgemeine Nachrichten' : category === 'TEAM1' ? 'Team 1 Nachrichten' : 'Team 2 Nachrichten' } : undefined}
-                                onValueChange={(option) => option && setCategory(option.value)}
+                            <select
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                className="w-full p-3 border border-input bg-background rounded-md text-foreground"
+                                style={{ minHeight: '44px' }}
                             >
-                                <SelectTrigger className="w-full text-foreground">
-                                    <SelectValue placeholder="Kategorie auswählen" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="ALLGEMEIN" label="Allgemeine Nachrichten">Allgemeine Nachrichten</SelectItem>
-                                    <SelectItem value="TEAM1" label="Team 1 Nachrichten">Team 1 Nachrichten</SelectItem>
-                                    <SelectItem value="TEAM2" label="Team 2 Nachrichten">Team 2 Nachrichten</SelectItem>
-                                </SelectContent>
-                            </Select>
+                                <option value="ALLGEMEIN">Allgemeine Nachrichten</option>
+                                <option value="TEAM1">Team 1 Nachrichten</option>
+                                <option value="TEAM2">Team 2 Nachrichten</option>
+                            </select>
                         </View>
 
                         <Button
