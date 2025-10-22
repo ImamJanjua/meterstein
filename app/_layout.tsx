@@ -128,7 +128,7 @@ export default function RootLayout() {
     <GestureHandlerRootView>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-        <RouteLogger />
+        {/* <RouteLogger /> */}
         <Stack>
           <Stack.Screen
             name="index"

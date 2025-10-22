@@ -15,7 +15,7 @@ import { toast } from "sonner-native";
 const CreateAlertScreen = () => {
     const [title, setTitle] = React.useState("");
     const [content, setContent] = React.useState("");
-    const [category, setCategory] = React.useState<string>("");
+    const [category, setCategory] = React.useState<string>("ALLGEMEIN");
     const [loading, setLoading] = React.useState(false);
     const [appRole, setAppRole] = React.useState<string | null>(null);
 

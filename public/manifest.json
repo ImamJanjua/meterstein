@@ -37,6 +37,20 @@
     "background_color": "#ffffff",
     "orientation": "portrait",
     "scope": "/",
+    "splash_screens": [
+        {
+            "src": "/splash-dark.png",
+            "sizes": "640x1388",
+            "type": "image/png",
+            "form_factor": "narrow"
+        },
+        {
+            "src": "/splash-dark.png",
+            "sizes": "640x1388",
+            "type": "image/png",
+            "form_factor": "wide"
+        }
+    ],
     "categories": [
         "business",
         "productivity"

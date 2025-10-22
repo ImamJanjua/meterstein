@@ -37,9 +37,11 @@ export default function Root({ children }: PropsWithChildren) {
                 <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png?v=1" />
                 <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png?v=1" />
 
+                {/* iOS Splash Screen - Universal for all devices */}
+                <link rel="apple-touch-startup-image" href="/splash-dark.png" />
+
                 {/* Additional iOS-specific meta tags */}
-                {/* <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-                <meta name="apple-touch-startup-image" content="/apple-touch-icon-180x180.png" /> */}
+                <meta name="apple-mobile-web-app-status-bar-style" content="#000000" />
 
 
                 {/* Standard Icons - different sizes */}
@@ -59,3 +61,46 @@ export default function Root({ children }: PropsWithChildren) {
         </html>
     );
 }
+
+{/* iOS Splash Screens - Different device orientations and sizes */ }
+{/* <link rel="apple-touch-startup-image" href="/splash-640x1136-png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" /> */ }
+{/* <link rel="apple-touch-startup-image" href="/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
+<link rel="apple-touch-startup-image" href="/splash-1125x2436-png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" />
+<link rel="apple-touch-startup-image" href="/splash-1242x2208-png" media=" (device-width: 414px)
+and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)" />
+‹link rel="apple-touch-startup-image" href="/splash-1536x2048.png" media="(device-width: 768px)
+and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" />
+‹link rel="apple-touch-startup-image" href="/splash-1668x2388.png" media="(device-width: 834px)
+and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" /> */}
+
+
+// {
+//     "src": "/splash-750x1334.png",
+//     "sizes": "750x1334",
+//     "type": "image/png",
+//     "form_factor": "narrow"
+// },
+// {
+//     "src": "/splash-1125x2436.png",
+//     "sizes": "1125x2436",
+//     "type": "image/png",
+//     "form_factor": "narrow"
+// },
+// {
+//     "src": "/splash-1242x2208.png",
+//     "sizes": "1242x2208",
+//     "type": "image/png",
+//     "form_factor": "narrow"
+// },
+// {
+//     "src": "/splash-1536x2048.png",
+//     "sizes": "1536x2048",
+//     "type": "image/png",
+//     "form_factor": "wide"
+// },
+// {
+//     "src": "/splash-1668x2388.png",
+//     "sizes": "1668x2388",
+//     "type": "image/png",
+//     "form_factor": "wide"
+// }
