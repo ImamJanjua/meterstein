@@ -1,13 +1,12 @@
 import React from "react";
-import { View, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { View, ScrollView } from "react-native";
 import { Text } from "~/components/ui/text";
 import { router } from "expo-router";
-import { ArrowLeft, Save } from "lucide-react-native";
+import { Save } from "lucide-react-native";
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { supabase } from "~/lib/supabase";
 import { getAppRole } from "~/lib/jwt-utils";
 import { toast } from "sonner-native";

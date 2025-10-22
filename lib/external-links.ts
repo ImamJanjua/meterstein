@@ -56,7 +56,7 @@ export const openExternalLink = async (url: string, fallbackMessage?: string): P
  * External links configuration
  */
 export const EXTERNAL_LINKS: Record<string, ExternalLink> = {
-    // Abnahme
+    // (Abnahme)
     abnahme: {
         id: 'abnahme',
         title: 'Abnahmeprotokoll',
@@ -64,7 +64,7 @@ export const EXTERNAL_LINKS: Record<string, ExternalLink> = {
         description: 'Abnahmeprotokoll öffnen'
     },
 
-    // Kalendar
+    // (Kalendar)
     kalendar: {
         id: 'kalendar',
         title: 'Kalender',
@@ -72,120 +72,10 @@ export const EXTERNAL_LINKS: Record<string, ExternalLink> = {
         description: 'Google Kalender öffnen'
     },
 
-    // Hilfe - PDFs
-    statikanfrage: {
-        id: 'statikanfrage',
-        title: 'Statikanfrage',
-        url: 'https://www.meterstein.de/app/montageanleitungen/statikanfrage-meterstein.pdf',
-        description: 'Statikanfrage PDF öffnen'
-    },
+    // (Hilfe)
+    // --- Inbetriebnahme ---
 
-    reklamationsformular: {
-        id: 'reklamationsformular',
-        title: 'Reklamationsformular',
-        url: 'https://www.meterstein.de/app/montageanleitungen/Reklamationsformular.pdf',
-        description: 'Reklamationsformular PDF öffnen'
-    },
-
-    baugenehmigung: {
-        id: 'baugenehmigung',
-        title: 'Baugenehmigung',
-        url: 'https://www.meterstein.de/app/montageanleitungen/baugenehmigung_antrag.pdf',
-        description: 'Baugenehmigung PDF öffnen'
-    },
-
-    glasrichtlinien: {
-        id: 'glasrichtlinien',
-        title: 'Glasrichtlinien',
-        url: 'https://www.meterstein.de/app/montageanleitungen/glasrichtlinien.pdf',
-        description: 'Glasrichtlinien PDF öffnen'
-    },
-
-    gewichtsermittlung: {
-        id: 'gewichtsermittlung',
-        title: 'Gewichtsermittlung',
-        url: 'https://www.meterstein.de/app/montageanleitungen/Gewichtsermittlung.pdf',
-        description: 'Gewichtsermittlung PDF öffnen'
-    },
-
-    zugband_wechseln: {
-        id: 'zugband_wechseln',
-        title: 'Zugband wechseln',
-        url: 'https://www.meterstein.de/app/montageanleitungen/t200_zugbandwechsel.pdf',
-        description: 'Zugband wechseln PDF öffnen'
-    },
-
-    motor_einlernen: {
-        id: 'motor_einlernen',
-        title: 'Motor einlernen',
-        url: 'https://www.meterstein.de/app/Selt/6channel-RC-Fernbedienung.pdf',
-        description: 'Motor einlernen PDF öffnen'
-    },
-
-    led_einlernen: {
-        id: 'led_einlernen',
-        title: 'LED einlernen',
-        url: 'https://www.meterstein.de/app/Selt/LED-wLight-datenblatt.pdf',
-        description: 'LED einlernen PDF öffnen'
-    },
-
-    einstellungen_wt_motor: {
-        id: 'einstellungen_wt_motor',
-        title: 'Einstellungen WT Motor',
-        url: 'https://www.meterstein.de/app/montageanleitungen/SOMFY-Orea-WT-mit-Einstellkabel.pdf',
-        description: 'Einstellungen WT Motor PDF öffnen'
-    },
-
-    // Montageanleitungen
-    t200: {
-        id: 't200',
-        title: 'T200',
-        url: 'https://www.meterstein.de/app/montageanleitungen/t200_einteilig_unterglas.pdf',
-        description: 'T200 Montageanleitung PDF öffnen'
-    },
-
-    t200_mehrteilig: {
-        id: 't200_mehrteilig',
-        title: 'T200 Mehrteilig',
-        url: 'https://www.meterstein.de/app/montageanleitungen/montageanleitung-t200-mehrteilig.pdf',
-        description: 'T200 Mehrteilig Montageanleitung PDF öffnen'
-    },
-
-    toskana: {
-        id: 'toskana',
-        title: 'Toskana',
-        url: 'https://www.meterstein.de/app/montageanleitungen/montageanleitung-toscana.pdf',
-        description: 'Toskana Montageanleitung PDF öffnen'
-    },
-
-    tarasola_tende: {
-        id: 'tarasola_tende',
-        title: 'Tarasola Tende',
-        url: 'https://www.meterstein.de/app/montageanleitungen/Lamellendach_tara-tende.pdf',
-        description: 'Tarasola Tende Montageanleitung PDF öffnen'
-    },
-
-    unter_aufdach: {
-        id: 'unter_aufdach',
-        title: 'Unter Aufdach',
-        url: 'https://meterstein.de/tuchkollektion.pdf',
-        description: 'Unter Aufdach PDF öffnen'
-    },
-
-    senkrecht: {
-        id: 'senkrecht',
-        title: 'Senkrecht',
-        url: 'https://meterstein.de/starscreen.pdf',
-        description: 'Senkrecht PDF öffnen'
-    },
-
-    seilspannmarkisen: {
-        id: 'seilspannmarkisen',
-        title: 'Seilspannmarkisen',
-        url: 'https://www.meterstein.de/app/montageanleitungen/Seilspannmarkisen.pdf',
-        description: 'Seilspannmarkisen PDF öffnen'
-    },
-
+    // Lamellendach SB1400
     sb1400: {
         id: 'sb1400',
         title: 'SB1400',
@@ -193,20 +83,41 @@ export const EXTERNAL_LINKS: Record<string, ExternalLink> = {
         description: 'SB1400 Montageanleitung PDF öffnen'
     },
 
-    kastenmarkisen: {
-        id: 'kastenmarkisen',
-        title: 'Kastenmarkisen',
-        url: 'https://www.meterstein.de/app/montageanleitungen/k100.pdf',
-        description: 'Kastenmarkisen PDF öffnen'
+    // Lamellendach Toskana
+    toskana: {
+        id: 'toskana',
+        title: 'Toskana',
+        url: 'https://www.meterstein.de/app/montageanleitungen/montageanleitung-toscana.pdf',
+        description: 'Toskana Montageanleitung PDF öffnen'
     },
 
-    aufdachmarkise: {
-        id: 'aufdachmarkise',
-        title: 'Aufdachmarkise',
-        url: 'https://www.meterstein.de/app/montageanleitungen/w350_mit_zip.pdf',
-        description: 'Aufdachmarkise PDF öffnen'
+    // Lamellendach Tende
+    tarasola_tende: {
+        id: 'tarasola_tende',
+        title: 'Tarasola Tende',
+        url: 'https://www.meterstein.de/app/montageanleitungen/Lamellendach_tara-tende.pdf',
+        description: 'Tarasola Tende Montageanleitung PDF öffnen'
     },
 
+    // Markisen
+    einstellungen_wt_motor: {
+        id: 'einstellungen_wt_motor',
+        title: 'Einstellungen WT Motor',
+        url: 'https://www.meterstein.de/app/montageanleitungen/SOMFY-Orea-WT-mit-Einstellkabel.pdf',
+        description: 'Einstellungen WT Motor PDF öffnen'
+    },
+
+    // Led Einstellungen
+    led_einlernen: {
+        id: 'led_einlernen',
+        title: 'LED einlernen',
+        url: 'https://www.meterstein.de/app/Selt/LED-wLight-datenblatt.pdf',
+        description: 'LED einlernen PDF öffnen'
+    },
+
+    // Sensoren
+
+    //Dreieck Festelement
     dreieck_festelement: {
         id: 'dreieck_festelement',
         title: 'Dreieck Festelement',
@@ -214,7 +125,63 @@ export const EXTERNAL_LINKS: Record<string, ExternalLink> = {
         description: 'Dreieck Festelement PDF öffnen'
     },
 
-    // Cube Line
+    // Markisen 2
+    seilspannmarkisen: {
+        id: 'seilspannmarkisen',
+        title: 'Seilspannmarkisen',
+        url: 'https://www.meterstein.de/app/montageanleitungen/Seilspannmarkisen.pdf',
+        description: 'Seilspannmarkisen PDF öffnen'
+    },
+    t200: {
+        id: 't200',
+        title: 'T200',
+        url: 'https://www.meterstein.de/app/montageanleitungen/t200_einteilig_unterglas.pdf',
+        description: 'T200 Montageanleitung PDF öffnen'
+    },
+    t200_mehrteilig: {
+        id: 't200_mehrteilig',
+        title: 'T200 Mehrteilig',
+        url: 'https://www.meterstein.de/app/montageanleitungen/montageanleitung-t200-mehrteilig.pdf',
+        description: 'T200 Mehrteilig Montageanleitung PDF öffnen'
+    },
+    kastenmarkisen: {
+        id: 'kastenmarkisen',
+        title: 'Kastenmarkisen',
+        url: 'https://www.meterstein.de/app/montageanleitungen/k100.pdf',
+        description: 'Kastenmarkisen PDF öffnen'
+    },
+    aufdachmarkise: {
+        id: 'aufdachmarkise',
+        title: 'Aufdachmarkise',
+        url: 'https://www.meterstein.de/app/montageanleitungen/w350_mit_zip.pdf',
+        description: 'Aufdachmarkise PDF öffnen'
+    },
+    zugband_wechseln: {
+        id: 'zugband_wechseln',
+        title: 'Zugband wechseln',
+        url: 'https://www.meterstein.de/app/montageanleitungen/t200_zugbandwechsel.pdf',
+        description: 'Zugband wechseln PDF öffnen'
+    },
+
+
+
+    motor_einlernen: {
+        id: 'motor_einlernen',
+        title: 'Motor einlernen',
+        url: 'https://www.meterstein.de/app/Selt/6channel-RC-Fernbedienung.pdf',
+        description: 'Motor einlernen PDF öffnen'
+    },
+    'motor-einlernen': {
+        id: 'motor-einlernen',
+        title: 'Motor einlernen',
+        url: 'https://www.meterstein.de/app/Selt/6channel-RC-Fernbedienung.pdf',
+        description: 'Motor einlernen PDF öffnen'
+    },
+
+
+
+
+    // Glasdächer
     cube_line_style: {
         id: 'cube_line_style',
         title: 'Cube Line Style',
@@ -249,20 +216,7 @@ export const EXTERNAL_LINKS: Record<string, ExternalLink> = {
         url: 'https://www.meterstein.de/app/montageanleitungen/montageanleitung-Cabrio-Line-compact.pdf',
         description: 'Cabrio Line Montageanleitung PDF öffnen'
     },
-    fundamentplan: {
-        id: 'fundamentplan',
-        title: 'Fundamentplan',
-        url: 'https://rqlesxlohtlfgwjtpqoh.supabase.co/storage/v1/object/public/hilfe-assets/fundamentplan.webp',
-        description: 'Fundamentplan Bild öffnen'
-    },
 
-    // Aliases for hyphenated IDs used in hilfe screen
-    'motor-einlernen': {
-        id: 'motor-einlernen',
-        title: 'Motor einlernen',
-        url: 'https://www.meterstein.de/app/Selt/6channel-RC-Fernbedienung.pdf',
-        description: 'Motor einlernen PDF öffnen'
-    },
 
     'led-einlernen': {
         id: 'led-einlernen',
@@ -292,12 +246,6 @@ export const EXTERNAL_LINKS: Record<string, ExternalLink> = {
         description: 'Tarasola Tende Montageanleitung PDF öffnen'
     },
 
-    'unter-aufdach': {
-        id: 'unter-aufdach',
-        title: 'Unter Aufdach',
-        url: 'https://meterstein.de/tuchkollektion.pdf',
-        description: 'Unter Aufdach PDF öffnen'
-    },
 
 
     'cube-line-style': {
@@ -347,7 +295,84 @@ export const EXTERNAL_LINKS: Record<string, ExternalLink> = {
         title: 'Zugband wechseln',
         url: 'https://www.meterstein.de/app/montageanleitungen/t200_zugbandwechsel.pdf',
         description: 'Zugband wechseln PDF öffnen'
-    }
+    },
+
+    //------------------------------
+
+
+
+    // --- Nützliches/Sonstiges ---
+    statikanfrage: {
+        id: 'statikanfrage',
+        title: 'Statikanfrage',
+        url: 'https://www.meterstein.de/app/montageanleitungen/statikanfrage-meterstein.pdf',
+        description: 'Statikanfrage PDF öffnen'
+    },
+
+    baugenehmigung: {
+        id: 'baugenehmigung',
+        title: 'Baugenehmigung',
+        url: 'https://www.meterstein.de/app/montageanleitungen/baugenehmigung_antrag.pdf',
+        description: 'Baugenehmigung PDF öffnen'
+    },
+
+    glasrichtlinien: {
+        id: 'glasrichtlinien',
+        title: 'Glasrichtlinien',
+        url: 'https://www.meterstein.de/app/montageanleitungen/glasrichtlinien.pdf',
+        description: 'Glasrichtlinien PDF öffnen'
+    },
+
+    gewichtsermittlung: {
+        id: 'gewichtsermittlung',
+        title: 'Gewichtsermittlung',
+        url: 'https://www.meterstein.de/app/montageanleitungen/Gewichtsermittlung.pdf',
+        description: 'Gewichtsermittlung PDF öffnen'
+    },
+
+    reklamationsformular: {
+        id: 'reklamationsformular',
+        title: 'Reklamationsformular',
+        url: 'https://www.meterstein.de/app/montageanleitungen/Reklamationsformular.pdf',
+        description: 'Reklamationsformular PDF öffnen'
+    },
+
+    fundamentplan: {
+        id: 'fundamentplan',
+        title: 'Fundamentplan',
+        url: 'https://rqlesxlohtlfgwjtpqoh.supabase.co/storage/v1/object/public/hilfe-assets/fundamentplan.webp',
+        description: 'Fundamentplan Bild öffnen'
+    },
+
+    // --- Markisenstoffe ---
+    'unter-aufdach': {
+        id: 'unter-aufdach',
+        title: 'Unter Aufdach',
+        url: 'https://meterstein.de/tuchkollektion.pdf',
+        description: 'Unter Aufdach PDF öffnen'
+    },
+
+    unter_aufdach: {
+        id: 'unter_aufdach',
+        title: 'Unter Aufdach',
+        url: 'https://meterstein.de/tuchkollektion.pdf',
+        description: 'Unter Aufdach PDF öffnen'
+    },
+
+    senkrecht: {
+        id: 'senkrecht',
+        title: 'Senkrecht',
+        url: 'https://meterstein.de/starscreen.pdf',
+        description: 'Senkrecht PDF öffnen'
+    },
+
+    'sonnensegel': {
+        id: 'sonnensegel',
+        title: 'Sonnensegel',
+        url: 'https://www.meterstein.de/app/montageanleitungen/sonnensegel-stofffarben.pdf',
+        description: 'Sonnensegel PDF öffnen'
+    },
+
 };
 
 /**

@@ -9,11 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/splash-dark.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff",
+      "backgroundColor": "#000000",
       "dark": {
-        "image": "./assets/images/splash.png",
+        "image": "./assets/images/splash-dark.png",
         "resizeMode": "contain",
         "backgroundColor": "#000000"
       }
@@ -33,14 +33,16 @@
       "buildNumber": "2",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#000000"
       },
       "package": "com.meterstein.app"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/icon.png"
+      "favicon": "./assets/images/icon.png",
+      "background_color": "#000000",
+      "theme_color": "#000000"
     },
     "plugins": [
       "expo-router",

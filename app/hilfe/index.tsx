@@ -25,6 +25,11 @@ const HilfeScreen = () => {
           image: require("~/assets/images/lamellendach-sb-1400.webp"),
           products: [
             {
+              id: "sb1400",
+              name: "SB1400",
+              image: require("~/assets/images/sb1400.webp"),
+            },
+            {
               id: "verkabelung",
               name: "Verkabelung",
               image: require("~/assets/images/verkabelung.webp"),
@@ -46,6 +51,38 @@ const HilfeScreen = () => {
           name: "Lamellendach Toskana",
           image: require("~/assets/images/lamellendach-toskana.webp"),
           products: [
+            {
+              id: "toskana",
+              name: "Toskana",
+              image: require("~/assets/images/toskana.webp"),
+            },
+            {
+              id: "verkabelung",
+              name: "Verkabelung",
+              image: require("~/assets/images/verkabelung.webp"),
+            },
+            {
+              id: "motor-einlernen",
+              name: "Motor einlernen",
+              image: require("~/assets/images/motor-einlernen.webp"),
+            },
+            {
+              id: "led-einlernen",
+              name: "LED einlernen",
+              image: require("~/assets/images/led-einlernen.webp"),
+            },
+          ],
+        },
+        {
+          id: "lamellendach-tende",
+          name: "Lamellendach Tende",
+          image: require("~/assets/images/tarasola-tende.webp"),
+          products: [
+            {
+              id: "tarasola-tende",
+              name: "Tarasola Tende",
+              image: require("~/assets/images/tarasola-tende.webp"),
+            },
             {
               id: "verkabelung",
               name: "Verkabelung",
@@ -119,13 +156,6 @@ const HilfeScreen = () => {
             },
           ],
         },
-      ],
-    },
-    {
-      id: "montageanleitungen",
-      name: "Montageanleitungen",
-      image: require("~/assets/images/montageanleitungen.webp"),
-      subcategories: [
         {
           id: "dreieck-festelement",
           name: "Dreieck & Festelement",
@@ -208,28 +238,6 @@ const HilfeScreen = () => {
           ],
         },
         {
-          id: "lamellendaecher",
-          name: "Lamellendächer",
-          image: require("~/assets/images/toskana.webp"),
-          products: [
-            {
-              id: "toskana",
-              name: "Toskana",
-              image: require("~/assets/images/toskana.webp"),
-            },
-            {
-              id: "sb1400",
-              name: "SB1400",
-              image: require("~/assets/images/sb1400.webp"),
-            },
-            {
-              id: "tarasola-tende",
-              name: "Tarasola Tende",
-              image: require("~/assets/images/tarasola-tende.webp"),
-            },
-          ],
-        },
-        {
           id: "freistand",
           name: "Freistand",
           image: require("~/assets/images/freistand.webp"),
@@ -243,76 +251,42 @@ const HilfeScreen = () => {
         },
       ],
     },
+    // Nützliches
     {
       id: "nuetzliches",
       name: "Nützliches",
       image: require("~/assets/images/nuetzliches.webp"),
       subcategories: [
         {
-          id: "statikanfrage",
-          name: "Statikanfrage",
-          image: require("~/assets/images/statikanfrage.webp"),
+          id: "sonstiges",
+          name: "Sonstiges",
+          image: require("~/assets/images/sonstiges-icon.webp"),
           products: [
             {
               id: "statikanfrage",
               name: "Statikanfrage",
               image: require("~/assets/images/statikanfrage.webp"),
             },
-          ],
-        },
-        {
-          id: "baugenehmigung",
-          name: "Baugenehmigung",
-          image: require("~/assets/images/baugenehmigung.webp"),
-          products: [
             {
               id: "baugenehmigung",
               name: "Baugenehmigung",
               image: require("~/assets/images/baugenehmigung.webp"),
             },
-          ],
-        },
-        {
-          id: "glasrichtlinien",
-          name: "Glasrichtlinien",
-          image: require("~/assets/images/glasrichtlinien.webp"),
-          products: [
             {
               id: "glasrichtlinien",
               name: "Glasrichtlinien",
               image: require("~/assets/images/glasrichtlinien.webp"),
             },
-          ],
-        },
-        {
-          id: "gewichtsermittlung",
-          name: "Gewichtsermittlung",
-          image: require("~/assets/images/gewichtsvermittlung.webp"),
-          products: [
             {
               id: "gewichtsermittlung",
               name: "Gewichtsermittlung",
               image: require("~/assets/images/gewichtsvermittlung.webp"),
             },
-          ],
-        },
-        {
-          id: "reklamationsformular",
-          name: "Reklamationsformular",
-          image: require("~/assets/images/reklamationsformular.webp"),
-          products: [
             {
               id: "reklamationsformular",
               name: "Reklamationsformular",
               image: require("~/assets/images/reklamationsformular.webp"),
             },
-          ],
-        },
-        {
-          id: "fundamentplan",
-          name: "Fundamentplan",
-          image: require("~/assets/images/fundamentplan.webp"),
-          products: [
             {
               id: "fundamentplan",
               name: "Fundamentplan",
@@ -334,6 +308,11 @@ const HilfeScreen = () => {
               id: "senkrecht",
               name: "Senkrecht",
               image: require("~/assets/images/senkrecht-hilfe.webp"),
+            },
+            {
+              id: "sonnensegel",
+              name: "Sonnensegel",
+              image: require("~/assets/images/sonnensegel.jpeg"),
             },
           ],
         },
