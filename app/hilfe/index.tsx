@@ -30,17 +30,17 @@ const HilfeScreen = () => {
               image: require("~/assets/images/sb1400.webp"),
             },
             {
-              id: "verkabelung",
+              id: "lamellendach-sb1400-verkabelung",
               name: "Verkabelung",
               image: require("~/assets/images/verkabelung.webp"),
             },
             {
-              id: "motor-einlernen",
+              id: "lamellendach-sb1400-motor-einlernen",
               name: "Motor einlernen",
               image: require("~/assets/images/motor-einlernen.webp"),
             },
             {
-              id: "led-einlernen",
+              id: "lamellendach-sb1400-led-einlernen",
               name: "LED einlernen",
               image: require("~/assets/images/led-einlernen.webp"),
             },
@@ -57,17 +57,17 @@ const HilfeScreen = () => {
               image: require("~/assets/images/toskana.webp"),
             },
             {
-              id: "verkabelung",
+              id: "lamellendach-toskana-verkabelung",
               name: "Verkabelung",
               image: require("~/assets/images/verkabelung.webp"),
             },
             {
-              id: "motor-einlernen",
+              id: "lamellendach-toskana-motor-einlernen",
               name: "Motor einlernen",
               image: require("~/assets/images/motor-einlernen.webp"),
             },
             {
-              id: "led-einlernen",
+              id: "lamellendach-toskana-led-einlernen",
               name: "LED einlernen",
               image: require("~/assets/images/led-einlernen.webp"),
             },
@@ -84,17 +84,17 @@ const HilfeScreen = () => {
               image: require("~/assets/images/tarasola-tende.webp"),
             },
             {
-              id: "verkabelung",
+              id: "lamellendach-tende-verkabelung",
               name: "Verkabelung",
               image: require("~/assets/images/verkabelung.webp"),
             },
             {
-              id: "motor-einlernen",
+              id: "lamellendach-tende-motor-einlernen",
               name: "Motor einlernen",
               image: require("~/assets/images/motor-einlernen.webp"),
             },
             {
-              id: "led-einlernen",
+              id: "lamellendach-tende-led-einlernen",
               name: "LED einlernen",
               image: require("~/assets/images/led-einlernen.webp"),
             },
