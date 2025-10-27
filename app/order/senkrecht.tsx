@@ -112,6 +112,41 @@ const Senkrecht = () => {
       return;
     }
 
+    if (!farbe.trim()) {
+      toast.error("Farbe erforderlich", {
+        description: "Bitte wählen Sie eine Farbe aus.",
+      });
+      return;
+    }
+
+    if (!motorseite.trim()) {
+      toast.error("Motorseite erforderlich", {
+        description: "Bitte wählen Sie die Motorseite aus.",
+      });
+      return;
+    }
+
+    if (!motorType.trim()) {
+      toast.error("Motor erforderlich", {
+        description: "Bitte wählen Sie einen Motortyp aus.",
+      });
+      return;
+    }
+
+    if (!kabeldurchfuehrung.trim()) {
+      toast.error("Kabeldurchführung erforderlich", {
+        description: "Bitte wählen Sie die Anzahl der Kabeldurchführungen aus.",
+      });
+      return;
+    }
+
+    if (!montageart.trim()) {
+      toast.error("Montageart erforderlich", {
+        description: "Bitte wählen Sie die Montageart aus.",
+      });
+      return;
+    }
+
     // validate zubehör
     if (
       !windwaechter &&
@@ -158,12 +193,13 @@ const Senkrecht = () => {
           type: 'Bestellung - Senkrecht mit ZIP',
           data: {
             Kundenname: nameKunde.trim(),
-            "Maß a": `${measurementA.trim()} mm (Außenkante - Außenkante)`,
-            "Maß b": `${measurementB.trim()} mm (Außenkante - Außenkante)`,
-            Farbe: farbe || "Nicht ausgewählt",
-            Motorseite: motorseite || "Nicht ausgewählt",
-            Motor: motorType || "Nicht ausgewählt",
-            "Kabeldurchführung": kabeldurchfuehrung || "Nicht ausgewählt",
+            "Maß a": `${measurementA.trim()} mm`,
+            "Maß b": `${measurementB.trim()} mm`,
+            Farbe: farbe,
+            Motorseite: motorseite,
+            Motor: motorType,
+            "Kabeldurchführung": kabeldurchfuehrung,
+            "Montageart": montageart,
             Zubehör: selectedZubehoer.length > 0 ? selectedZubehoer.join(", ") : "Kein Zubehör ausgewählt",
             Stoff: stoff.trim(),
             Wichtiges: wichtiges.trim() || "Nichts angegeben",
@@ -280,7 +316,7 @@ const Senkrecht = () => {
 
           {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Farbe</Text>
+            <Text className="text-lg font-semibold">Farbe *</Text>
             <RadioGroup
               value={farbe}
               onValueChange={setFarbe}
@@ -298,7 +334,7 @@ const Senkrecht = () => {
 
           {/* Motorseite Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Motorseite</Text>
+            <Text className="text-lg font-semibold">Motorseite *</Text>
             <RadioGroup
               value={motorseite}
               onValueChange={setMotorseite}
@@ -316,7 +352,7 @@ const Senkrecht = () => {
 
           {/* Motor Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Motor</Text>
+            <Text className="text-lg font-semibold">Motor *</Text>
             <RadioGroup
               value={motorType}
               onValueChange={setMotorType}
@@ -334,7 +370,7 @@ const Senkrecht = () => {
 
           {/* Kabeldurchführung Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Kabeldurchführung</Text>
+            <Text className="text-lg font-semibold">Kabeldurchführung *</Text>
             <RadioGroup
               value={kabeldurchfuehrung}
               onValueChange={setKabeldurchfuehrung}
@@ -350,9 +386,9 @@ const Senkrecht = () => {
             </RadioGroup>
           </View>
 
-          {/* Kabeldurchführung Section */}
+          {/* Montageart Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Montageart</Text>
+            <Text className="text-lg font-semibold">Montageart *</Text>
             <RadioGroup
               value={montageart}
               onValueChange={setMontageart}

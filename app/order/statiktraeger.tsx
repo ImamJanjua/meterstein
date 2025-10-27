@@ -178,6 +178,20 @@ const Statikträger = () => {
       return;
     }
 
+    if (!farbe.trim()) {
+      toast.error("Farbe erforderlich", {
+        description: "Bitte wählen Sie eine Farbe aus.",
+      });
+      return;
+    }
+
+    if (!deckelSet.trim()) {
+      toast.error("Deckel Set erforderlich", {
+        description: "Bitte wählen Sie aus, ob ein Deckel Set benötigt wird.",
+      });
+      return;
+    }
+
     if (isUploading) {
       toast.error("Bilder werden hochgeladen", {
         description: "Bitte warten Sie, bis alle Bilder hochgeladen sind.",
@@ -203,8 +217,8 @@ const Statikträger = () => {
             Kundenname: nameKunde.trim(),
             Stück: measurementB.trim(),
             Länge: measurementC.trim(),
-            'Deckel Set': deckelSet || "Nicht ausgewählt",
-            Farbe: farbe || "Nicht ausgewählt",
+            'Deckel Set': deckelSet,
+            Farbe: farbe,
             Wichtiges: wichtiges || "Nichts angegeben",
           },
           imageUrls: imageUrls,
@@ -307,7 +321,7 @@ const Statikträger = () => {
 
           {/* Deckel Set Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Deckel Set</Text>
+            <Text className="text-lg font-semibold">Deckel Set *</Text>
             <RadioGroup
               value={deckelSet}
               onValueChange={setDeckelSet}
@@ -325,7 +339,7 @@ const Statikträger = () => {
 
           {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Farbe</Text>
+            <Text className="text-lg font-semibold">Farbe *</Text>
             <RadioGroup
               value={farbe}
               onValueChange={setFarbe}

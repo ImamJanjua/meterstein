@@ -177,6 +177,20 @@ const Rinne = () => {
       return;
     }
 
+    if (!farbe.trim()) {
+      toast.error("Farbe erforderlich", {
+        description: "Bitte wählen Sie eine Farbe aus.",
+      });
+      return;
+    }
+
+    if (!rinnenart.trim()) {
+      toast.error("Rinnenart erforderlich", {
+        description: "Bitte wählen Sie eine Rinnenart aus.",
+      });
+      return;
+    }
+
     if (isUploading) {
       toast.error("Bilder werden hochgeladen", {
         description: "Bitte warten Sie, bis alle Bilder hochgeladen sind.",
@@ -201,8 +215,8 @@ const Rinne = () => {
           data: {
             Kundenname: nameKunde.trim(),
             Länge: measurementB.trim(),
-            Rinnenart: rinnenart || "Nicht ausgewählt",
-            Farbe: farbe || "Nicht ausgewählt",
+            Rinnenart: rinnenart,
+            Farbe: farbe,
             Wichtiges: wichtiges || "Nichts angegeben",
           },
           imageUrls: imageUrls,
@@ -292,7 +306,7 @@ const Rinne = () => {
 
           {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Farbe</Text>
+            <Text className="text-lg font-semibold">Farbe *</Text>
             <RadioGroup
               value={farbe}
               onValueChange={setFarbe}
@@ -310,7 +324,7 @@ const Rinne = () => {
 
           {/* Rinnenart Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Rinnenart</Text>
+            <Text className="text-lg font-semibold">Rinnenart *</Text>
             <RadioGroup
               value={rinnenart}
               onValueChange={setRinnenart}

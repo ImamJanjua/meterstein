@@ -193,6 +193,27 @@ const FertigesDreieck = () => {
       return;
     }
 
+    if (!farbe.trim()) {
+      toast.error("Farbe erforderlich", {
+        description: "Bitte wählen Sie eine Farbe aus.",
+      });
+      return;
+    }
+
+    if (!ansichtVonAussen.trim()) {
+      toast.error("Ansicht von außen erforderlich", {
+        description: "Bitte wählen Sie die Ansicht von außen aus.",
+      });
+      return;
+    }
+
+    if (!glasart.trim()) {
+      toast.error("Glasart erforderlich", {
+        description: "Bitte wählen Sie eine Glasart aus.",
+      });
+      return;
+    }
+
     if (isUploading) {
       toast.error("Bilder werden hochgeladen", {
         description: "Bitte warten Sie, bis alle Bilder hochgeladen sind.",
@@ -219,9 +240,9 @@ const FertigesDreieck = () => {
             'Maß a': `${measurementA} mm`,
             'Maß b': `${measurementB} mm`,
             'Maß c': `${measurementC} mm`,
-            Farbe: farbe || "Nicht ausgewählt",
-            'Ansicht von außen': ansichtVonAussen || "Nicht ausgewählt",
-            Glasart: glasart || "Nicht ausgewählt",
+            Farbe: farbe,
+            'Ansicht von außen': ansichtVonAussen,
+            Glasart: glasart,
             Wichtiges: wichtiges || "Nichts angegeben",
           },
           imageUrls: imageUrls,
@@ -337,7 +358,7 @@ const FertigesDreieck = () => {
 
           {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Farbe</Text>
+            <Text className="text-lg font-semibold">Farbe *</Text>
             <RadioGroup
               value={farbe}
               onValueChange={setFarbe}
@@ -355,7 +376,7 @@ const FertigesDreieck = () => {
 
           {/* Ansicht von außen Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Ansicht (von außen)</Text>
+            <Text className="text-lg font-semibold">Ansicht (von außen) *</Text>
             <RadioGroup
               value={ansichtVonAussen}
               onValueChange={setAnsichtVonAussen}
@@ -373,7 +394,7 @@ const FertigesDreieck = () => {
 
           {/* Glasart Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Glasart (von außen)</Text>
+            <Text className="text-lg font-semibold">Glasart (von außen) *</Text>
             <RadioGroup
               value={glasart}
               onValueChange={setGlasart}

@@ -190,6 +190,27 @@ const Glas = () => {
             return;
         }
 
+        if (!glasart.trim()) {
+            toast.error("Glasart erforderlich", {
+                description: "Bitte wählen Sie eine Glasart aus.",
+            });
+            return;
+        }
+
+        if (!starke.trim()) {
+            toast.error("Stärke erforderlich", {
+                description: "Bitte wählen Sie eine Stärke aus.",
+            });
+            return;
+        }
+
+        if (!durchsicht.trim()) {
+            toast.error("Durchsicht erforderlich", {
+                description: "Bitte wählen Sie eine Durchsicht aus.",
+            });
+            return;
+        }
+
         if (isUploading) {
             toast.error("Bilder werden hochgeladen", {
                 description: "Bitte warten Sie, bis alle Bilder hochgeladen sind.",
@@ -217,9 +238,9 @@ const Glas = () => {
                         a: `${measurementA.trim()} mm`,
                         b: `${measurementB.trim()} mm`,
                         c: `${measurementC.trim()} mm`,
-                        'Welches Glas': glasart || "Nicht ausgewählt",
-                        Stärke: starke || "Nicht ausgewählt",
-                        Durchsicht: durchsicht || "Nicht ausgewählt",
+                        'Welches Glas': glasart,
+                        Stärke: starke,
+                        Durchsicht: durchsicht,
                         Wichtiges: wichtiges || "Nichts angegeben",
                     },
                     imageUrls: imageUrls,
@@ -345,7 +366,7 @@ const Glas = () => {
 
                     {/* Welches Glas Section */}
                     <View className="gap-2">
-                        <Text className="text-lg font-semibold">Welches Glas?</Text>
+                        <Text className="text-lg font-semibold">Welches Glas? *</Text>
                         <RadioGroup
                             value={glasart}
                             onValueChange={setGlasart}
@@ -363,7 +384,7 @@ const Glas = () => {
 
                     {/* Stärke Section */}
                     <View className="gap-2">
-                        <Text className="text-lg font-semibold">Stärke?</Text>
+                        <Text className="text-lg font-semibold">Stärke? *</Text>
                         <RadioGroup
                             value={starke}
                             onValueChange={setStarke}
@@ -381,7 +402,7 @@ const Glas = () => {
 
                     {/* Durchsicht Section */}
                     <View className="gap-2">
-                        <Text className="text-lg font-semibold">Durchsicht?</Text>
+                        <Text className="text-lg font-semibold">Durchsicht? *</Text>
                         <RadioGroup
                             value={durchsicht}
                             onValueChange={setDurchsicht}

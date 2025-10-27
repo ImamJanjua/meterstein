@@ -177,6 +177,13 @@ const Winkel = () => {
       return;
     }
 
+    if (!abmessungen.trim()) {
+      toast.error("Abmessungen erforderlich", {
+        description: "Bitte wählen Sie die Abmessungen aus.",
+      });
+      return;
+    }
+
     if (isUploading) {
       toast.error("Bilder werden hochgeladen", {
         description: "Bitte warten Sie, bis alle Bilder hochgeladen sind.",
@@ -201,7 +208,7 @@ const Winkel = () => {
           data: {
             Kundenname: nameKunde.trim(),
             Stück: measurementB.trim(),
-            Abmessungen: abmessungen || "Nicht ausgewählt",
+            Abmessungen: abmessungen,
             Farbe: farbe.trim(),
             Wichtiges: wichtiges || "Nichts angegeben",
           },
@@ -291,7 +298,7 @@ const Winkel = () => {
 
           {/* Abmessungen Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Abmessungen</Text>
+            <Text className="text-lg font-semibold">Abmessungen *</Text>
             <RadioGroup
               value={abmessungen}
               onValueChange={setAbmessungen}

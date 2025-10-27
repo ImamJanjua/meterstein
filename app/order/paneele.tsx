@@ -174,6 +174,13 @@ const Paneele = () => {
       return;
     }
 
+    if (!farbe.trim()) {
+      toast.error("Farbe erforderlich", {
+        description: "Bitte wählen Sie eine Farbe aus.",
+      });
+      return;
+    }
+
     if (isUploading) {
       toast.error("Bilder werden hochgeladen", {
         description: "Bitte warten Sie, bis alle Bilder hochgeladen sind.",
@@ -199,7 +206,7 @@ const Paneele = () => {
             Kundenname: nameKunde.trim(),
             Länge: measurementB.trim(),
             Stück: stueck.trim(),
-            Farbe: farbe || "Nicht ausgewählt",
+            Farbe: farbe,
             Wichtiges: wichtiges || "Nichts angegeben",
           },
           imageUrls: imageUrls,
@@ -300,7 +307,7 @@ const Paneele = () => {
 
           {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Farbe</Text>
+            <Text className="text-lg font-semibold">Farbe *</Text>
             <RadioGroup
               value={farbe}
               onValueChange={setFarbe}

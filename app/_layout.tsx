@@ -84,7 +84,7 @@ export default function RootLayout() {
           if (event === "INITIAL_SESSION") {
           } else if (event === "SIGNED_IN") {
           } else if (event === "SIGNED_OUT") {
-            router.replace("/");
+            router.replace("/signin");
           }
         });
 

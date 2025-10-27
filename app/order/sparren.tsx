@@ -183,6 +183,20 @@ const Sparren = () => {
       return;
     }
 
+    if (!farbe.trim()) {
+      toast.error("Farbe erforderlich", {
+        description: "Bitte wählen Sie eine Farbe aus.",
+      });
+      return;
+    }
+
+    if (!sparrenart.trim()) {
+      toast.error("Sparrenart erforderlich", {
+        description: "Bitte wählen Sie eine Sparrenart aus.",
+      });
+      return;
+    }
+
     if (isUploading) {
       toast.error("Bilder werden hochgeladen", {
         description: "Bitte warten Sie, bis alle Bilder hochgeladen sind.",
@@ -208,8 +222,8 @@ const Sparren = () => {
             Kundenname: nameKunde.trim(),
             Länge: measurementB.trim(),
             Stück: stueck.trim(),
-            Sparrenart: sparrenart || "Nicht ausgewählt",
-            Farbe: farbe || "Nicht ausgewählt",
+            Sparrenart: sparrenart,
+            Farbe: farbe,
             Wichtiges: wichtiges || "Nichts angegeben",
           },
           imageUrls: imageUrls,
@@ -311,7 +325,7 @@ const Sparren = () => {
 
           {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Farbe</Text>
+            <Text className="text-lg font-semibold">Farbe *</Text>
             <RadioGroup
               value={farbe}
               onValueChange={setFarbe}
@@ -329,7 +343,7 @@ const Sparren = () => {
 
           {/* Sparrenart Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Sparrenart</Text>
+            <Text className="text-lg font-semibold">Sparrenart *</Text>
             <RadioGroup
               value={sparrenart}
               onValueChange={setSparrenart}

@@ -175,6 +175,13 @@ const Pfosten = () => {
       return;
     }
 
+    if (!farbe.trim()) {
+      toast.error("Farbe erforderlich", {
+        description: "Bitte wählen Sie eine Farbe aus.",
+      });
+      return;
+    }
+
     if (!masse.trim()) {
       toast.error("Maße erforderlich", {
         description: "Bitte wählen Sie die Maße aus.",
@@ -207,7 +214,7 @@ const Pfosten = () => {
             Kundenname: nameKunde.trim(),
             Länge: measurementB.trim(),
             Maße: masse.trim(),
-            Farbe: farbe || "Nicht ausgewählt",
+            Farbe: farbe,
             Wichtiges: wichtiges || "Nichts angegeben",
           },
           imageUrls: imageUrls,
@@ -297,7 +304,7 @@ const Pfosten = () => {
 
           {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Farbe</Text>
+            <Text className="text-lg font-semibold">Farbe *</Text>
             <RadioGroup
               value={farbe}
               onValueChange={setFarbe}

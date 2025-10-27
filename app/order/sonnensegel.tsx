@@ -81,6 +81,13 @@ const Sonnensegel = () => {
       return;
     }
 
+    if (!farbe.trim()) {
+      toast.error("Farbe erforderlich", {
+        description: "Bitte wählen Sie eine Farbe aus.",
+      });
+      return;
+    }
+
     if (!stoff.trim()) {
       toast.error("Stoff erforderlich", {
         description: "Bitte geben Sie die Stoffinformationen ein.",
@@ -114,7 +121,7 @@ const Sonnensegel = () => {
             Kundenname: nameKunde.trim(),
             "Maß a": `${measurementA.trim()} mm`,
             "Maß b": `${measurementB.trim()} mm`,
-            Farbe: farbe || "Nicht ausgewählt",
+            Farbe: farbe,
             Stück: stueck.trim(),
             Stoff: stoff.trim(),
             Wichtiges: wichtiges.trim() || "Nichts angegeben",
@@ -250,7 +257,7 @@ const Sonnensegel = () => {
 
           {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Farbe</Text>
+            <Text className="text-lg font-semibold">Farbe *</Text>
             <RadioGroup
               value={farbe}
               onValueChange={setFarbe}

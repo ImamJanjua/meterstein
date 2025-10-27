@@ -1,19 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollView, View, TouchableOpacity } from "react-native";
-import { router } from "expo-router";
 import { Image } from "expo-image";
 import { Text } from "~/components/ui/text";
 import { Card } from "~/components/ui/card";
 import { ChevronRight } from "~/lib/icons/index";
 import { openExternalLinkById } from "~/lib/external-links";
+import { getAppRole } from "~/lib/jwt-utils";
+import { supabase } from "~/lib/supabase";
 
 const HilfeScreen = () => {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSubcategory, setExpandedSubcategory] = useState<string | null>(
     null
   );
+  const [userAppRole, setUserAppRole] = useState<string | null>(null);
 
-  const categories = [
+  // Get user's app role on component mount
+  useEffect(() => {
+    const getUserRole = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.access_token) {
+          const appRole = getAppRole(session.access_token);
+          setUserAppRole(appRole);
+        }
+      } catch (error) {
+        console.error("Error getting user role:", error);
+      }
+    };
+
+    getUserRole();
+  }, []);
+
+  const allCategories = [
     {
       id: "inbetriebnahme",
       name: "Inbetriebnahme",
@@ -318,7 +337,48 @@ const HilfeScreen = () => {
         },
       ],
     },
+    // Büro
+    {
+      id: "buero",
+      name: "Büro",
+      image: require("~/assets/images/buero.jpg"),
+      products: [
+        {
+          id: "statikanfrage",
+          name: "Statikanfrage",
+          image: require("~/assets/images/statikanfrage.webp"),
+        },
+        {
+          id: "baugenehmigung",
+          name: "Baugenehmigung",
+          image: require("~/assets/images/baugenehmigung.webp"),
+        },
+        {
+          id: "reklamationsformular",
+          name: "Reklamationsformular",
+          image: require("~/assets/images/reklamationsformular.webp"),
+        },
+        {
+          id: "preislisten",
+          name: "Preislisten",
+          image: require("~/assets/images/preislisten.webp"),
+        },
+      ],
+    },
   ];
+
+  // Filter categories based on user's app role
+  const categories = allCategories.filter(category => {
+    // Always show "Inbetriebnahme" and "Nützliches"
+    if (category.id === "inbetriebnahme" || category.id === "nuetzliches") {
+      return true;
+    }
+    // Only show "Büro" if user has 'büro' app role
+    if (category.id === "buero") {
+      return userAppRole === "büro";
+    }
+    return true;
+  });
 
   return (
     <ScrollView className="flex-1 bg-background">
@@ -361,86 +421,123 @@ const HilfeScreen = () => {
 
               {expandedCategory === category.id && (
                 <View className="border-t border-border">
-                  {category.subcategories.map((subcategory) => (
-                    <View key={subcategory.id}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          // If subcategory has only one product, open external link directly
-                          if (subcategory.products?.length === 1) {
-                            openExternalLinkById(subcategory.products[0].id);
-                          } else {
-                            // Otherwise, toggle the accordion
-                            setExpandedSubcategory(
-                              expandedSubcategory === subcategory.id
-                                ? null
-                                : subcategory.id
-                            );
-                          }
-                        }}
-                        className="p-4 flex-row items-center justify-between bg-secondary/20 border-b border-red-500/40"
-                      >
-                        <View className="flex-row items-center gap-3 flex-1">
-                          <Image
-                            source={subcategory.image}
-                            contentFit="cover"
-                            cachePolicy="memory-disk"
-                            transition={200}
-                            style={{
-                              width: 60,
-                              height: 60,
-                              borderRadius: 8,
-                            }}
-                          />
-                          <View className="flex-1">
-                            <Text className="font-medium text-lg">
-                              {subcategory.name}
-                            </Text>
-                            <Text className="text-sm text-muted-foreground">
-                              {subcategory.products?.length === 1
-                                ? "PDF wird geöffnet"
-                                : `${subcategory.products?.length} Anleitungen verfügbar`}
-                            </Text>
-                          </View>
-                        </View>
-                        <ChevronRight className="w-6 h-6 text-foreground" />
-                      </TouchableOpacity>
-
-                      {expandedSubcategory === subcategory.id && (
-                        <View className="bg-background">
-                          {subcategory.products?.map((product) => (
-                            <TouchableOpacity
-                              key={product.id}
-                              onPress={() => {
-                                // Open external link directly
-                                openExternalLinkById(product.id);
+                  {/* Check if category has products directly (no subcategories) */}
+                  {category.products ? (
+                    <View className="bg-background">
+                      {category.products.map((product) => (
+                        <TouchableOpacity
+                          key={product.id}
+                          onPress={() => {
+                            // Open external link directly
+                            openExternalLinkById(product.id);
+                          }}
+                          className="p-3 pl-8 flex-row items-center justify-between border-b border-border/40"
+                        >
+                          <View className="flex-row items-center gap-3 flex-1">
+                            <Image
+                              source={product.image}
+                              contentFit="cover"
+                              cachePolicy="memory-disk"
+                              transition={200}
+                              style={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: 6,
                               }}
-                              className="p-3 pl-8 flex-row items-center justify-between border-b border-border/40"
-                            >
-                              <View className="flex-row items-center gap-3 flex-1">
-                                <Image
-                                  source={product.image}
-                                  contentFit="cover"
-                                  cachePolicy="memory-disk"
-                                  transition={200}
-                                  style={{
-                                    width: 50,
-                                    height: 50,
-                                    borderRadius: 6,
-                                  }}
-                                />
-                                <View className="flex-1">
-                                  <Text className="font-medium">
-                                    {product.name}
-                                  </Text>
-                                </View>
-                              </View>
-                              <ChevronRight className="w-6 h-6 text-foreground" />
-                            </TouchableOpacity>
-                          ))}
-                        </View>
-                      )}
+                            />
+                            <View className="flex-1">
+                              <Text className="font-medium">
+                                {product.name}
+                              </Text>
+                            </View>
+                          </View>
+                          <ChevronRight className="w-6 h-6 text-foreground" />
+                        </TouchableOpacity>
+                      ))}
                     </View>
-                  ))}
+                  ) : (
+                    /* Render subcategories if they exist */
+                    category.subcategories?.map((subcategory) => (
+                      <View key={subcategory.id}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            // If subcategory has only one product, open external link directly
+                            if (subcategory.products?.length === 1) {
+                              openExternalLinkById(subcategory.products[0].id);
+                            } else {
+                              // Otherwise, toggle the accordion
+                              setExpandedSubcategory(
+                                expandedSubcategory === subcategory.id
+                                  ? null
+                                  : subcategory.id
+                              );
+                            }
+                          }}
+                          className="p-4 flex-row items-center justify-between bg-secondary/20 border-b border-red-500/40"
+                        >
+                          <View className="flex-row items-center gap-3 flex-1">
+                            <Image
+                              source={subcategory.image}
+                              contentFit="cover"
+                              cachePolicy="memory-disk"
+                              transition={200}
+                              style={{
+                                width: 60,
+                                height: 60,
+                                borderRadius: 8,
+                              }}
+                            />
+                            <View className="flex-1">
+                              <Text className="font-medium text-lg">
+                                {subcategory.name}
+                              </Text>
+                              <Text className="text-sm text-muted-foreground">
+                                {subcategory.products?.length === 1
+                                  ? "PDF wird geöffnet"
+                                  : `${subcategory.products?.length} Anleitungen verfügbar`}
+                              </Text>
+                            </View>
+                          </View>
+                          <ChevronRight className="w-6 h-6 text-foreground" />
+                        </TouchableOpacity>
+
+                        {expandedSubcategory === subcategory.id && (
+                          <View className="bg-background">
+                            {subcategory.products?.map((product) => (
+                              <TouchableOpacity
+                                key={product.id}
+                                onPress={() => {
+                                  // Open external link directly
+                                  openExternalLinkById(product.id);
+                                }}
+                                className="p-3 pl-8 flex-row items-center justify-between border-b border-border/40"
+                              >
+                                <View className="flex-row items-center gap-3 flex-1">
+                                  <Image
+                                    source={product.image}
+                                    contentFit="cover"
+                                    cachePolicy="memory-disk"
+                                    transition={200}
+                                    style={{
+                                      width: 50,
+                                      height: 50,
+                                      borderRadius: 6,
+                                    }}
+                                  />
+                                  <View className="flex-1">
+                                    <Text className="font-medium">
+                                      {product.name}
+                                    </Text>
+                                  </View>
+                                </View>
+                                <ChevronRight className="w-6 h-6 text-foreground" />
+                              </TouchableOpacity>
+                            ))}
+                          </View>
+                        )}
+                      </View>
+                    ))
+                  )}
                 </View>
               )}
             </Card>

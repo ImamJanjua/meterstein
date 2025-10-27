@@ -101,6 +101,27 @@ const UnterdachT350 = () => {
       return;
     }
 
+    if (!farbe.trim()) {
+      toast.error("Farbe erforderlich", {
+        description: "Bitte wählen Sie eine Farbe aus.",
+      });
+      return;
+    }
+
+    if (!motorseite.trim()) {
+      toast.error("Motorseite erforderlich", {
+        description: "Bitte wählen Sie die Motorseite aus.",
+      });
+      return;
+    }
+
+    if (!motorType.trim()) {
+      toast.error("Motor erforderlich", {
+        description: "Bitte wählen Sie einen Motortyp aus.",
+      });
+      return;
+    }
+
     // validate zubehör
     if (
       !windwaechter &&
@@ -147,11 +168,11 @@ const UnterdachT350 = () => {
           type: 'Bestellung - Unterdach T350 ZIP',
           data: {
             Kundenname: nameKunde.trim(),
-            "Maß a": `${measurementA.trim()} mm (Innenkante - Innenkante -60mm)`,
-            "Maß b": `${measurementB.trim()} mm (Außenkante - Außenkante)`,
-            Farbe: farbe || "Nicht ausgewählt",
-            Motorseite: motorseite || "Nicht ausgewählt",
-            Motor: motorType || "Nicht ausgewählt",
+            "Maß a": `${measurementA.trim()} mm`,
+            "Maß b": `${measurementB.trim()} mm`,
+            Farbe: farbe,
+            Motorseite: motorseite,
+            Motor: motorType,
             Zubehör: selectedZubehoer.length > 0 ? selectedZubehoer.join(", ") : "Kein Zubehör ausgewählt",
             Stoff: stoff.trim(),
             Wichtiges: wichtiges.trim() || "Nichts angegeben",
@@ -277,7 +298,7 @@ const UnterdachT350 = () => {
 
           {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Farbe</Text>
+            <Text className="text-lg font-semibold">Farbe *</Text>
             <RadioGroup
               value={farbe}
               onValueChange={setFarbe}
@@ -295,7 +316,7 @@ const UnterdachT350 = () => {
 
           {/* Motorseite Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Motorseite</Text>
+            <Text className="text-lg font-semibold">Motorseite *</Text>
             <RadioGroup
               value={motorseite}
               onValueChange={setMotorseite}
@@ -313,7 +334,7 @@ const UnterdachT350 = () => {
 
           {/* Motor Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Motor</Text>
+            <Text className="text-lg font-semibold">Motor *</Text>
             <RadioGroup
               value={motorType}
               onValueChange={setMotorType}

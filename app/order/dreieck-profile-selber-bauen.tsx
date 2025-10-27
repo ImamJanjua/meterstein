@@ -174,6 +174,13 @@ const DreieckProfileSelberBauen = () => {
       return;
     }
 
+    if (!farbe.trim()) {
+      toast.error("Farbe erforderlich", {
+        description: "Bitte wählen Sie eine Farbe aus.",
+      });
+      return;
+    }
+
     if (!rahmenprofil && !mittelprofil) {
       toast.error("Profilart erforderlich", {
         description: "Bitte wählen Sie mindestens eine Profilart aus.",
@@ -205,7 +212,7 @@ const DreieckProfileSelberBauen = () => {
           data: {
             Kundenname: nameKunde.trim(),
             Stück: measurementB.trim(),
-            Farbe: farbe || "Nicht ausgewählt",
+            Farbe: farbe,
             Profilart: `${rahmenprofil ? "Rahmenprofil AL8002 mit Deckel" : ""}${rahmenprofil && mittelprofil ? ", " : ""}${mittelprofil ? "Mittelprofil AL8000 mit Deckel" : ""}`,
             Wichtiges: wichtiges || "Nichts angegeben",
           },
@@ -298,7 +305,7 @@ const DreieckProfileSelberBauen = () => {
 
           {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Farbe</Text>
+            <Text className="text-lg font-semibold">Farbe *</Text>
             <RadioGroup
               value={farbe}
               onValueChange={setFarbe}

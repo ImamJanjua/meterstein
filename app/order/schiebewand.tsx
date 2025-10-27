@@ -184,6 +184,20 @@ const Schiebewand = () => {
       return;
     }
 
+    if (!farbe.trim()) {
+      toast.error("Farbe erforderlich", {
+        description: "Bitte wählen Sie eine Farbe aus.",
+      });
+      return;
+    }
+
+    if (!griffVonAussen.trim()) {
+      toast.error("Griff von außen erforderlich", {
+        description: "Bitte wählen Sie die Griffposition aus.",
+      });
+      return;
+    }
+
     if (isUploading) {
       toast.error("Bilder werden hochgeladen", {
         description: "Bitte warten Sie, bis alle Bilder hochgeladen sind.",
@@ -211,10 +225,10 @@ const Schiebewand = () => {
           type: `Bestellung - Schiebewand`,
           data: {
             Kundenname: nameKunde.trim(),
-            'Maß a': `${measurementA} mm (Innenkante - Innenkante -60mm)`,
-            'Maß b': `${measurementB} mm (Außenkante - Außenkante)`,
-            Farbe: farbe || "Nicht ausgewählt",
-            'Griff von außen': griffVonAussen || "Nicht ausgewählt",
+            'Maß a': `${measurementA} mm`,
+            'Maß b': `${measurementB} mm`,
+            Farbe: farbe,
+            'Griff von außen': griffVonAussen,
             Zusatz: selectedZubehoer.join(", "),
             Wichtiges: wichtiges || "Nichts angegeben",
           },
@@ -317,7 +331,7 @@ const Schiebewand = () => {
 
           {/* Farbe Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Farbe</Text>
+            <Text className="text-lg font-semibold">Farbe *</Text>
             <RadioGroup
               value={farbe}
               onValueChange={setFarbe}
@@ -335,7 +349,7 @@ const Schiebewand = () => {
 
           {/* Griff von außen Section */}
           <View className="gap-2">
-            <Text className="text-lg font-semibold">Griff von außen</Text>
+            <Text className="text-lg font-semibold">Griff von außen *</Text>
             <RadioGroup
               value={griffVonAussen}
               onValueChange={setGriffVonAussen}

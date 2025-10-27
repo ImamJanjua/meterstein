@@ -363,6 +363,14 @@ export const EXTERNAL_LINKS: Record<string, ExternalLink> = {
         description: 'Sonnensegel PDF öffnen'
     },
 
+    // -------- Büro --------
+
+    'preislisten': {
+        id: 'preislisten',
+        title: 'Preislisten',
+        url: 'https://www.meterstein.de/app/preislisten/preisliste-meterstein.pdf',
+        description: 'Preislisten PDF öffnen'
+    },
 };
 
 /**
