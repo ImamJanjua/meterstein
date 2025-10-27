@@ -28,7 +28,6 @@ import { Card } from "~/components/ui/card";
 import { supabase } from "~/lib/supabase";
 import { getAppRole, getUserEmail, getUserId } from "~/lib/jwt-utils";
 import { openExternalLinkById } from "~/lib/external-links";
-import Test from "./test";
 
 const HomeScreen = () => {
   const [appRole, setAppRole] = React.useState<string | null>(null);
@@ -330,6 +329,8 @@ const HomeScreen = () => {
             <LogOut size={18} className="text-red-500 mr-2" />
             <Text className="text-red-500 font-semibold text-sm">Abmelden</Text>
           </TouchableOpacity>
+
+          <Text className="text-muted-foreground font-semibold text-sm mt-4">Version 1.0.0</Text>
         </View>
       </View>
     </ScrollView>
