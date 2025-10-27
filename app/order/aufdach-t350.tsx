@@ -231,7 +231,7 @@ const AufdachT350 = () => {
             activeOpacity={0.8}
           >
             <Image
-              source={require("~/assets/images/unterdach-t200.webp")}
+              source={require("~/assets/images/aufdachmarkise.jpeg")}
               contentFit="contain"
               cachePolicy="memory-disk"
               transition={200}
@@ -449,7 +449,7 @@ const AufdachT350 = () => {
                 style={{ flex: 1 }}
               >
                 <Image
-                  source={require("~/assets/images/unterdach-t200.webp")}
+                  source={require("~/assets/images/aufdachmarkise.jpeg")}
                   contentFit="contain"
                   cachePolicy="memory-disk"
                   transition={200}
