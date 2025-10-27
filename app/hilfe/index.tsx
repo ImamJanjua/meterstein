@@ -282,29 +282,9 @@ const HilfeScreen = () => {
           image: require("~/assets/images/sonstiges-icon.webp"),
           products: [
             {
-              id: "statikanfrage",
-              name: "Statikanfrage",
-              image: require("~/assets/images/statikanfrage.webp"),
-            },
-            {
-              id: "baugenehmigung",
-              name: "Baugenehmigung",
-              image: require("~/assets/images/baugenehmigung.webp"),
-            },
-            {
               id: "glasrichtlinien",
               name: "Glasrichtlinien",
               image: require("~/assets/images/glasrichtlinien.webp"),
-            },
-            {
-              id: "gewichtsermittlung",
-              name: "Gewichtsermittlung",
-              image: require("~/assets/images/gewichtsvermittlung.webp"),
-            },
-            {
-              id: "reklamationsformular",
-              name: "Reklamationsformular",
-              image: require("~/assets/images/reklamationsformular.webp"),
             },
             {
               id: "fundamentplan",
@@ -359,6 +339,11 @@ const HilfeScreen = () => {
           image: require("~/assets/images/reklamationsformular.webp"),
         },
         {
+          id: "gewichtsermittlung",
+          name: "Gewichtsermittlung",
+          image: require("~/assets/images/gewichtsvermittlung.webp"),
+        },
+        {
           id: "preislisten",
           name: "Preislisten",
           image: require("~/assets/images/preislisten.webp"),
@@ -385,7 +370,7 @@ const HilfeScreen = () => {
       <View className="p-4 gap-4 flex-1 justify-center">
         {/* Header */}
         <View className="mb-16 mt-8 items-center">
-          <Text className="text-3xl font-bold text-red-500 mb-2">Hilfe</Text>
+          <Text className="text-3xl font-bold text-red-500 mb-2">Info</Text>
           <Text className="text-lg text-muted-foreground">
             Wählen Sie eine Kategorie aus
           </Text>

@@ -64,6 +64,13 @@ export const EXTERNAL_LINKS: Record<string, ExternalLink> = {
         description: 'Abnahmeprotokoll öffnen'
     },
 
+    'teilabnahme': {
+        id: 'teilabnahme',
+        title: 'Teilabnahmeprotokoll',
+        url: 'https://www.meterstein.de/teilabnahme/',
+        description: 'Teilabnahmeprotokoll öffnen'
+    },
+
     // (Kalendar)
     'kalendar': {
         id: 'kalendar',

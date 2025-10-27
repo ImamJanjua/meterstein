@@ -48,7 +48,7 @@ const AbnahmeScreen = () => {
         {/* Teilabnahme Button */}
         <Card className="overflow-hidden">
           <TouchableOpacity
-            onPress={() => openExternalLinkById("abnahme")}
+            onPress={() => openExternalLinkById("teilabnahme")}
             className="p-4 flex-row items-center justify-between bg-primary/5"
           >
             <View className="flex-row items-center gap-3">
